@@ -1,0 +1,15 @@
+INSERT INTO tb_category (name,url) VALUES ('Smartphones','smartphones.com.br');
+INSERT INTO tb_category (name,url) VALUES ('Livros','livros.com.br');
+INSERT INTO tb_category (name,url) VALUES ('Eletrônicos','eletronicos.com.br');
+INSERT INTO tb_category (name,url) VALUES ('Informática','informatica.com.br');
+INSERT INTO tb_category (name,url) VALUES ('Games','games.com.br');
+INSERT INTO tb_category (name,url) VALUES ('Móveis','moveis.com.br');
+INSERT INTO tb_category (name,url) VALUES ('Decoração','decoracao.com.br');
+INSERT INTO tb_category (name,url) VALUES ('Esportes','esportes.com.br');
+INSERT INTO tb_category (name,url) VALUES ('Moda','moda.com.br');
+INSERT INTO tb_category (name,url) VALUES ('Brinquedos','brinquedos.com.br');
+INSERT INTO tb_category (name,url) VALUES ('Ferramentas','ferramentas.com.br');
+INSERT INTO tb_category (name,url) VALUES ('Beleza','beleza.com.br');
+INSERT INTO tb_category (name,url) VALUES ('Papelaria','papelaria.com.br');
+INSERT INTO tb_category (name,url) VALUES ('Petshop','petshop.com.br');
+INSERT INTO tb_category (name,url) VALUES ('Alimentos','alimentos.com.br');
