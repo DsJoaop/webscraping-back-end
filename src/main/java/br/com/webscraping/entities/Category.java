@@ -20,11 +20,9 @@ public class Category implements Serializable {
     private String url;
 
     @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
-    @Getter
     private Instant createdAt;
 
     @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
-    @Getter
     private Instant updateAt;
 
     @PrePersist
@@ -36,5 +34,7 @@ public class Category implements Serializable {
     public void preUpdate() {
         updateAt = Instant.now();
     }
+
+
 
 }

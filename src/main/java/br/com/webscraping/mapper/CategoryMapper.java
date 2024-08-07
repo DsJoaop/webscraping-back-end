@@ -5,5 +5,5 @@ import br.com.webscraping.entities.Category;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface CategoryMapper extends  EntityMapper<CategoryDTO, Category> {
+public interface CategoryMapper extends EntityMapper<CategoryDTO, Category> {
 }

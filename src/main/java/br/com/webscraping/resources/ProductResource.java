@@ -9,6 +9,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 
 @RestController
@@ -39,7 +42,7 @@ public class ProductResource {
         return ResponseEntity.ok().body(dto);
     }
 
-/**
+
     @PostMapping
     public ResponseEntity<ProductDTO> insert(@RequestBody ProductDTO dto) {
         dto = service.insert(dto);
@@ -53,7 +56,7 @@ public class ProductResource {
         dto = service.update(id, dto);
         return ResponseEntity.ok().body(dto);
     }
-*/
+
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<ProductDTO> delete(@PathVariable Long id) {
         service.delete(id);
