@@ -6,7 +6,9 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -28,7 +30,7 @@ public class Category implements Serializable {
     private Instant updatedAt;
 
     @OneToMany(mappedBy = "category")
-    private Set<Product> products = new HashSet<>();
+    private List<Product> products = new ArrayList<>();
 
     @PrePersist
     public void prePersist() {

@@ -5,14 +5,10 @@ import br.com.webscraping.entities.Product;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(uses = CategoryMapper.class)
+@Mapper(componentModel = "spring")
 public interface ProductMapper extends EntityMapper<ProductDTO, Product> {
 
-    @Override
-    @Mapping(source = "category", target = "category", qualifiedByName = "toDtoWithoutProducts")
-    ProductDTO toDto(Product entity);
+    @Mapping(ignore = true, target = "category.products")
+    ProductDTO toDto(Product product);
 
-    @Override
-    @Mapping(source = "category", target = "category", qualifiedByName = "toEntityWithoutProducts")
-    Product toEntity(ProductDTO dto);
 }

@@ -33,6 +33,7 @@ public class CategoryService {
 
     @Transactional(readOnly = true)
     public List<CategoryDTO> findAll() {
+        System.out.println("ok");
         return repository.findAll().stream()
                 .map(mapper::toDto)
                 .toList();
@@ -76,6 +77,7 @@ public class CategoryService {
         }
     }
 
+    @Transactional
     public Page<CategoryDTO> findAllPage(PageRequest pageRequest) {
         Page<Category> list = repository.findAll(pageRequest);
         return list.map(mapper::toDto);

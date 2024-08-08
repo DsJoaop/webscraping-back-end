@@ -15,6 +15,7 @@ public class ProductDTO implements Serializable {
     private Double price;
     private String imgUrl;
     private String url;
+
     private CategoryDTO category;
 
 }
