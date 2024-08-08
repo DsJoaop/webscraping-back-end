@@ -14,22 +14,7 @@ public interface EntityMapper<D, E> {
 
     List<D> toDto(List<E> entityList);
 
+    Set<E> toEntity(Set<D> dtoList);
 
-    default Set<E> toEntity(Set<D> dtoSet) {
-        if (dtoSet == null) {
-            return null;
-        }
-        return dtoSet.stream()
-                .map(this::toEntity)
-                .collect(Collectors.toSet());
-    }
-
-    default Set<D> toDto(Set<E> entitySet) {
-        if (entitySet == null) {
-            return null;
-        }
-        return entitySet.stream()
-                .map(this::toDto)
-                .collect(Collectors.toSet());
-    }
+    Set<D> toDto(Set<E> entityList);
 }

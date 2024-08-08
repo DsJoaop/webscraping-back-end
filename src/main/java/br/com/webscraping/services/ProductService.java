@@ -5,7 +5,6 @@ import br.com.webscraping.entities.Product;
 import br.com.webscraping.exceptions.DatabaseException;
 import br.com.webscraping.exceptions.ResourceNotFoundException;
 import br.com.webscraping.mapper.ProductMapper;
-import br.com.webscraping.repositories.CategoryRepository;
 import br.com.webscraping.repositories.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,34 +15,23 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-
 @Service
 public class ProductService {
 
     private final ProductRepository repository;
-    private final CategoryRepository categoryRepository;
     private final ProductMapper mapper;
 
+
     @Autowired
-    public ProductService(ProductRepository repository, CategoryRepository categoryRepository, ProductMapper mapper) {
+    public ProductService(ProductRepository repository, ProductMapper mapper) {
         this.repository = repository;
-        this.categoryRepository = categoryRepository;
         this.mapper = mapper;
     }
 
     @Transactional(readOnly = true)
-    public List<ProductDTO> findAll() {
-        return repository.findAll().stream()
-                .map(mapper::toDto)
-                .toList();
-    }
-
-    @Transactional(readOnly = true)
     public ProductDTO findById(Long id) {
-        Optional<Product> obj = repository.findById(id);
-        Product entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
+        Product entity = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
         return mapper.toDto(entity);
     }
 
@@ -79,7 +67,7 @@ public class ProductService {
     }
 
     public Page<ProductDTO> findAllPage(PageRequest pageRequest) {
-        Page<Product> list = repository.findAll(pageRequest);
-        return list.map(mapper::toDto);
+        return repository.findAll(pageRequest).map(mapper::toDto);
     }
+
 }
