@@ -1,12 +1,14 @@
 package br.com.webscraping.services;
 
-import br.com.webscraping.dto.ProductDTO;
-import br.com.webscraping.entities.Product;
+import br.com.webscraping.dto.CategoryDTO;
+import br.com.webscraping.dto.PharmacyDTO;
+import br.com.webscraping.entities.Category;
+import br.com.webscraping.entities.Pharmacy;
 import br.com.webscraping.exceptions.DatabaseException;
 import br.com.webscraping.exceptions.ResourceNotFoundException;
-import br.com.webscraping.mapper.ProductMapper;
+import br.com.webscraping.mapper.PharmacyMapper;
+import br.com.webscraping.repositories.PharmacyRepository;
 import br.com.webscraping.repositories.CategoryRepository;
-import br.com.webscraping.repositories.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -22,38 +24,40 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class ProductService {
+public class PharmacyService {
 
-    private final CategoryRepository categoryRepository;
-    private final ProductRepository repository;
-    private final ProductMapper mapper;
+    private final PharmacyRepository repository;
+    private final PharmacyMapper mapper;
+    private final CategoryRepository CategoryRepository;
 
     @Transactional(readOnly = true)
-    public List<ProductDTO> findAll() {
+    public List<PharmacyDTO> findAll() {
         return mapper.toDto(repository.findAll());
     }
 
     @Transactional(readOnly = true)
-    public ProductDTO findById(Long id) {
-        Optional<Product> obj = repository.findById(id);
-        Product entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
+    public PharmacyDTO findById(Long id) {
+        Optional<Pharmacy> obj = repository.findById(id);
+        Pharmacy entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
         return mapper.toDto(entity);
     }
 
     @Transactional
-    public ProductDTO insert(ProductDTO dto) {
-        Product entity = mapper.toEntity(dto);
+    public PharmacyDTO insert(PharmacyDTO dto) {
+        Pharmacy entity = mapper.toEntity(dto);
+        copyDtoToEntityCategory(dto, entity);
         entity = repository.save(entity);
         return mapper.toDto(entity);
     }
 
     @Transactional
-    public ProductDTO update(Long id, ProductDTO dto) {
+    public PharmacyDTO update(Long id, PharmacyDTO dto) {
         if (!repository.existsById(id)) {
             throw new ResourceNotFoundException("Id not found " + id);
         }
         try {
-            Product entity = mapper.toEntity(dto);
+            Pharmacy entity = mapper.toEntity(dto);
+            copyDtoToEntityCategory(dto, entity);
             entity.setId(id);
             entity = repository.save(entity);
             return mapper.toDto(entity);
@@ -75,9 +79,16 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductDTO> findAllPage(Pageable pageRequest) {
-        Page<Product> list = repository.findAll(pageRequest);
+    public Page<PharmacyDTO> findAllPage(Pageable pageRequest) {
+        Page<Pharmacy> list = repository.findAll(pageRequest);
         return list.map(mapper::toDto);
     }
 
+    private void copyDtoToEntityCategory(PharmacyDTO dto, Pharmacy entity) {
+        entity.getCategories().clear();
+        for (CategoryDTO catDto : dto.getCategories()) {
+            Optional<Category> category = CategoryRepository.findById(catDto.getId());
+            category.ifPresent(entity.getCategories()::add);
+        }
+    }
 }

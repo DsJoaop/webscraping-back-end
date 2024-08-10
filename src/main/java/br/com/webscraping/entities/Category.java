@@ -39,6 +39,10 @@ public class Category implements Serializable {
             cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Product> products = new ArrayList<>();
 
+    @ManyToOne
+    @JoinColumn(name = "pharmacy_id")
+    private Pharmacy pharmacy;
+
     @PrePersist
     public void prePersist() {
         createdAt = Instant.now();

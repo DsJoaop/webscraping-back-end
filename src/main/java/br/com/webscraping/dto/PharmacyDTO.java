@@ -10,12 +10,18 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class CategoryDTO implements Serializable {
+public class PharmacyDTO implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
     private Long id;
     private String name;
+    private String address;
+    private String phone;
+    private String city;
+    private String state;
+    private String zipCode;
     private String url;
-    private List<ProductDTO> products = new ArrayList<>();
+    private String imgUrl;
+    private List<CategoryDTO> categories = new ArrayList<>();
 }
