@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
@@ -46,6 +45,7 @@ public class CategoryService {
     public CategoryDTO insert(CategoryDTO dto) {
         Category entity = mapper.toEntity(dto);
         copyDtoToEntityProducts(dto, entity);
+        copyDtoToEntitySubcategories(dto, entity);
         entity = repository.save(entity);
         return mapper.toDto(entity);
     }
@@ -58,6 +58,8 @@ public class CategoryService {
         try {
             Category entity = mapper.toEntity(dto);
             entity.setId(id);
+            copyDtoToEntityProducts(dto, entity);
+            copyDtoToEntitySubcategories(dto, entity);
             entity = repository.save(entity);
             return mapper.toDto(entity);
         } catch (EntityNotFoundException e) {
@@ -83,13 +85,34 @@ public class CategoryService {
         return list.map(mapper::toDto);
     }
 
-    public void copyDtoToEntityProducts(CategoryDTO dto, Category entity) {
+    private void copyDtoToEntityProducts(CategoryDTO dto, Category entity) {
         if (dto.getProducts() != null) {
             entity.getProducts().clear();
             for (ProductDTO productDTO : dto.getProducts()) {
                 Optional<Product> productOpt = productRepository.findById(productDTO.getId());
-                productOpt.ifPresent(product -> entity.getProducts().add(product));
+                if (productOpt.isPresent()) {
+                    entity.getProducts().add(productOpt.get());
+                    productOpt.get().setCategory(entity);
+                }
             }
         }
     }
+
+    private void copyDtoToEntitySubcategories(CategoryDTO dto, Category entity) {
+        if (dto.getSubcategories() != null) {
+            entity.getSubcategories().clear();
+            for (CategoryDTO subcategoryDTO : dto.getSubcategories()) {
+                Category subcategory;
+                if (subcategoryDTO.getId() != null) {
+                    subcategory = repository.findById(subcategoryDTO.getId())
+                            .orElseThrow(() -> new ResourceNotFoundException("Subcategory not found with id: " + subcategoryDTO.getId()));
+                } else {
+                    subcategory = mapper.toEntity(subcategoryDTO);
+                }
+                subcategory.setParentCategory(entity);
+                entity.getSubcategories().add(subcategory);
+            }
+        }
+    }
+
 }

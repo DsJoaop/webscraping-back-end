@@ -18,4 +18,5 @@ public class CategoryDTO implements Serializable {
     private String name;
     private String url;
     private List<ProductDTO> products = new ArrayList<>();
+    private List<CategoryDTO> subcategories = new ArrayList<>();
 }
