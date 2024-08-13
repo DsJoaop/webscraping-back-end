@@ -4,6 +4,7 @@ import br.com.webscraping.dto.ProductDTO;
 import br.com.webscraping.entities.Product;
 import br.com.webscraping.exceptions.DatabaseException;
 import br.com.webscraping.exceptions.ResourceNotFoundException;
+import br.com.webscraping.mapper.CategoryMapper;
 import br.com.webscraping.mapper.ProductMapper;
 import br.com.webscraping.repositories.ProductRepository;
 import br.com.webscraping.tests.Factory;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -34,6 +36,9 @@ public class ProductServiceTests {
     @Mock
     private ProductMapper mapper;
 
+    @Mock
+    private CategoryMapper categoryMapper;
+
     private long existingId;
     private long nonExistingId;
     private long dependentId;
@@ -50,6 +55,8 @@ public class ProductServiceTests {
         productDTO = Factory.createProductDTO();
         page = new PageImpl<>(List.of(product));
 
+
+        // ProductRepository
         when(repository.findAll((Pageable) ArgumentMatchers.any())).thenReturn(page);
         when(repository.save(ArgumentMatchers.any())).thenReturn(product);
 
@@ -62,7 +69,7 @@ public class ProductServiceTests {
         when(repository.existsById(nonExistingId)).thenReturn(false);
         when(repository.existsById(dependentId)).thenReturn(true);
 
-        // Mock do mapper
+        // ProductMapper
         when(mapper.toDto(product)).thenReturn(productDTO);
         when(mapper.toEntity(productDTO)).thenReturn(product);
         when(mapper.toDto(List.of(product))).thenReturn(List.of(productDTO));
@@ -123,5 +130,12 @@ public class ProductServiceTests {
             service.findById(nonExistingId);
         });
         Mockito.verify(repository, Mockito.times(1)).findById(nonExistingId);
+    }
+
+    @Test
+    public void findAllPageShouldReturnPage() {
+        Pageable pageable = PageRequest.of(0, 10);
+        service.findAllPage(pageable);
+        Mockito.verify(repository, Mockito.times(1)).findAll(pageable);
     }
 }

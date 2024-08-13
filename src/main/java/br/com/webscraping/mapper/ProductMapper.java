@@ -13,6 +13,5 @@ public interface ProductMapper extends EntityMapper<ProductDTO, Product> {
     Product toEntity(ProductDTO dto);
 
     @Override
-    @Mapping(target = "category", ignore = true)
     ProductDTO toDto(Product entity);
 }

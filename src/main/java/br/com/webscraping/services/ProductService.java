@@ -50,7 +50,7 @@ public class ProductService {
     @Transactional
     public ProductDTO update(Long id, ProductDTO dto) {
         if (!repository.existsById(id)) {
-            throw new ResourceNotFoundException("Id not found " + id);
+            throw new ResourceNotFoundException("Entity not found");
         }
         try {
             Product entity = mapper.toEntity(dto);
@@ -58,14 +58,14 @@ public class ProductService {
             entity = repository.save(entity);
             return mapper.toDto(entity);
         } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException("Id not found " + id);
+            throw new ResourceNotFoundException("Entity not found");
         }
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)
     public void delete(Long id) {
         if (!repository.existsById(id)) {
-            throw new ResourceNotFoundException("Id not found " + id);
+            throw new ResourceNotFoundException("Entity not found");
         }
         try {
             repository.deleteById(id);
