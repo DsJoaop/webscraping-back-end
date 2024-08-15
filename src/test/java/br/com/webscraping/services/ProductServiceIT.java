@@ -3,6 +3,7 @@ package br.com.webscraping.services;
 import br.com.webscraping.dto.ProductDTO;
 import br.com.webscraping.exceptions.ResourceNotFoundException;
 import br.com.webscraping.repositories.ProductRepository;
+import br.com.webscraping.tests.Factory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,14 +23,12 @@ public class ProductServiceIT {
     private ProductRepository repository;
     private Long existingId;
     private Long nonExistingId;
-    private Long dependentId;
     private Long countTotalProducts;
 
     @BeforeEach
     void setUp() {
         existingId = 1L;
         nonExistingId = 100L;
-        dependentId = 4L;
         countTotalProducts = repository.count();
     }
 
@@ -77,6 +76,43 @@ public class ProductServiceIT {
         Assertions.assertEquals("Antisséptico Bucal 250ml", result.getContent().get(0).getName());
         Assertions.assertEquals("Balança Digital", result.getContent().get(1).getName());
         Assertions.assertEquals("Band-Aid", result.getContent().get(2).getName());
+    }
+
+    @Test
+    public void updateShouldReturnProductDTOWhenIdExists() {
+        ProductDTO productDTO = service.findById(existingId);
+        productDTO.setName("Teste");
+        productDTO = service.update(existingId, productDTO);
+        Assertions.assertEquals("Teste", productDTO.getName());
+    }
+
+    @Test
+    public void updateShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {
+        ProductDTO productDTO = service.findById(existingId);
+        productDTO.setName("Teste");
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+            service.update(nonExistingId, productDTO);
+        });
+    }
+
+    @Test
+    public void insertShouldReturnProductDTOCreated() {
+        ProductDTO productDTO = Factory.createProductDTO();
+        productDTO = service.insert(productDTO);
+        Assertions.assertNotNull(productDTO.getId());
+    }
+
+    @Test
+    public void findByIdShouldReturnProductDTOWhenIdExists() {
+        ProductDTO productDTO = service.findById(existingId);
+        Assertions.assertNotNull(productDTO);
+    }
+
+    @Test
+    public void findByIdShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+            service.findById(nonExistingId);
+        });
     }
 
 }
