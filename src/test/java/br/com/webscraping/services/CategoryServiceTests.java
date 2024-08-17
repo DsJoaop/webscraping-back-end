@@ -1,11 +1,12 @@
 package br.com.webscraping.services;
 
-import br.com.webscraping.dto.ProductDTO;
-import br.com.webscraping.entities.Product;
+import br.com.webscraping.dto.CategoryDTO;
+import br.com.webscraping.entities.Category;
 import br.com.webscraping.exceptions.DatabaseException;
 import br.com.webscraping.exceptions.ResourceNotFoundException;
 import br.com.webscraping.mapper.CategoryMapper;
 import br.com.webscraping.mapper.ProductMapper;
+import br.com.webscraping.repositories.CategoryRepository;
 import br.com.webscraping.repositories.ProductRepository;
 import br.com.webscraping.utils.Factory;
 import org.junit.jupiter.api.Assertions;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,57 +27,61 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-public class ProductServiceTests {
+public class CategoryServiceTests {
 
     @InjectMocks
-    private ProductService service;
+    private CategoryService service;
 
     @Mock
-    private ProductRepository repository;
+    private CategoryRepository repository;
 
     @Mock
-    private ProductMapper mapper;
+    private CategoryMapper mapper;
 
     @Mock
-    private CategoryMapper categoryMapper;
+    private ProductMapper productMapper;
+
+    @Mock
+    private ProductRepository productRepository;
 
     private long existingId;
     private long nonExistingId;
     private long dependentId;
-    private PageImpl<Product> page;
-    private Product product;
-    private ProductDTO productDTO;
+    private PageImpl<Category> page;
+    private Category category;
+    private CategoryDTO categoryDTO;
 
     @BeforeEach
     void setUp() {
         existingId = 1L;
         nonExistingId = 100L;
         dependentId = 4L;
-        product = Factory.createProduct();
-        productDTO = Factory.createProductDTO();
-        page = new PageImpl<>(List.of(product));
+        category = Factory.createCategory();
+        categoryDTO = Factory.createCategoryDTO();
+        page = new PageImpl<>(List.of(category));
 
-
-        // ProductRepository
+        // CategoryRepository
         when(repository.findAll((Pageable) ArgumentMatchers.any())).thenReturn(page);
-        when(repository.save(ArgumentMatchers.any())).thenReturn(product);
+        when(repository.save(ArgumentMatchers.any())).thenReturn(category);
 
-        when(repository.findById(existingId)).thenReturn(Optional.of(product));
+        when(repository.findById(existingId)).thenReturn(Optional.of(category));
         when(repository.findById(nonExistingId)).thenReturn(Optional.empty());
 
-        doThrow(DatabaseException.class).when(repository).deleteById(dependentId);
+        doThrow(DataIntegrityViolationException.class).when(repository).deleteById(dependentId);
 
         when(repository.existsById(existingId)).thenReturn(true);
         when(repository.existsById(nonExistingId)).thenReturn(false);
         when(repository.existsById(dependentId)).thenReturn(true);
 
+        // CategoryMapper
+        when(mapper.toDto(category)).thenReturn(categoryDTO);
+        when(mapper.toEntity(categoryDTO)).thenReturn(category);
+        when(mapper.toDto(List.of(category))).thenReturn(List.of(categoryDTO));
+
         // ProductMapper
-        when(mapper.toDto(product)).thenReturn(productDTO);
-        when(mapper.toEntity(productDTO)).thenReturn(product);
-        when(mapper.toDto(List.of(product))).thenReturn(List.of(productDTO));
+        when(productMapper.toDto(ArgumentMatchers.anyList())).thenReturn(categoryDTO.getProducts());
+        when(productMapper.toEntity(ArgumentMatchers.anyList())).thenReturn(category.getProducts());
     }
-
-
 
     @Test
     public void deleteShouldDoNothingWhenIdExists() {
@@ -107,10 +113,10 @@ public class ProductServiceTests {
 
     @Test
     public void findAllShouldReturnList() {
-        List<Product> products = List.of(product);
-        when(repository.findAll()).thenReturn(products);
+        List<Category> categories = List.of(category);
+        when(repository.findAll()).thenReturn(categories);
 
-        List<ProductDTO> result = service.findAll();
+        List<CategoryDTO> result = service.findAll();
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.size());
@@ -118,8 +124,8 @@ public class ProductServiceTests {
     }
 
     @Test
-    public void findByIdShouldReturnProductDTOWhenIdExists() {
-        ProductDTO result = service.findById(existingId);
+    public void findByIdShouldReturnCategoryDTOWhenIdExists() {
+        CategoryDTO result = service.findById(existingId);
         Assertions.assertNotNull(result);
         Mockito.verify(repository, Mockito.times(1)).findById(existingId);
     }
@@ -130,6 +136,27 @@ public class ProductServiceTests {
             service.findById(nonExistingId);
         });
         Mockito.verify(repository, Mockito.times(1)).findById(nonExistingId);
+    }
+
+    @Test
+    public void insertShouldSaveAndReturnCategoryDTO() {
+        CategoryDTO result = service.insert(categoryDTO);
+        Assertions.assertNotNull(result);
+        Mockito.verify(repository, Mockito.times(1)).save(category);
+    }
+
+    @Test
+    public void updateShouldSaveAndReturnCategoryDTOWhenIdExists() {
+        CategoryDTO result = service.update(existingId, categoryDTO);
+        Assertions.assertNotNull(result);
+        Mockito.verify(repository, Mockito.times(1)).save(category);
+    }
+
+    @Test
+    public void updateShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+            service.update(nonExistingId, categoryDTO);
+        });
     }
 
     @Test

@@ -3,7 +3,7 @@ package br.com.webscraping.resources;
 import br.com.webscraping.dto.ProductDTO;
 import br.com.webscraping.repositories.ProductRepository;
 import br.com.webscraping.services.ProductService;
-import br.com.webscraping.tests.Factory;
+import br.com.webscraping.utils.Factory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

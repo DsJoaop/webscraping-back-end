@@ -1,7 +1,7 @@
 package br.com.webscraping.repositories;
 
 import br.com.webscraping.entities.Product;
-import br.com.webscraping.tests.Factory;
+import br.com.webscraping.utils.Factory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

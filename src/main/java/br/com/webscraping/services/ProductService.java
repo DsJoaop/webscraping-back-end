@@ -5,7 +5,6 @@ import br.com.webscraping.entities.Product;
 import br.com.webscraping.exceptions.DatabaseException;
 import br.com.webscraping.exceptions.ResourceNotFoundException;
 import br.com.webscraping.mapper.ProductMapper;
-import br.com.webscraping.repositories.CategoryRepository;
 import br.com.webscraping.repositories.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +23,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ProductService {
 
-    private final CategoryRepository categoryRepository;
     private final ProductRepository repository;
     private final ProductMapper mapper;
 

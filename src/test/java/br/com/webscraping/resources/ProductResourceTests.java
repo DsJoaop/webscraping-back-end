@@ -4,7 +4,7 @@ import br.com.webscraping.dto.ProductDTO;
 import br.com.webscraping.exceptions.DatabaseException;
 import br.com.webscraping.exceptions.ResourceNotFoundException;
 import br.com.webscraping.services.ProductService;
-import br.com.webscraping.tests.Factory;
+import br.com.webscraping.utils.Factory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

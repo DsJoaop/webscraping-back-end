@@ -3,7 +3,7 @@ package br.com.webscraping.services;
 import br.com.webscraping.dto.ProductDTO;
 import br.com.webscraping.exceptions.ResourceNotFoundException;
 import br.com.webscraping.repositories.ProductRepository;
-import br.com.webscraping.tests.Factory;
+import br.com.webscraping.utils.Factory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -114,5 +114,4 @@ public class ProductServiceIT {
             service.findById(nonExistingId);
         });
     }
-
 }
