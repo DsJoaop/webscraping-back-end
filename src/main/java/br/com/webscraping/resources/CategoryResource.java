@@ -1,11 +1,14 @@
-
 package br.com.webscraping.resources;
 
 import br.com.webscraping.dto.CategoryDTO;
 import br.com.webscraping.services.CategoryService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -14,18 +17,16 @@ import java.net.URI;
 
 @RestController
 @RequestMapping(value = "/categories")
+@RequiredArgsConstructor
 public class CategoryResource {
     private final CategoryService service;
-
-    @Autowired
-    public CategoryResource(CategoryService service) {
-        this.service = service;
-    }
+    private final PagedResourcesAssembler<CategoryDTO> pagedResourcesAssembler;
 
     @GetMapping
-    public ResponseEntity<Page<CategoryDTO>> findAll(Pageable peageable) {
-        Page<CategoryDTO> list = service.findAllPage(peageable);
-        return ResponseEntity.ok().body(list);
+    public ResponseEntity<PagedModel<EntityModel<CategoryDTO>>> findAll(Pageable pageable) {
+        Page<CategoryDTO> list = service.findAllPaged(pageable);
+        PagedModel<EntityModel<CategoryDTO>> pagedModel = pagedResourcesAssembler.toModel(list);
+        return ResponseEntity.ok().body(pagedModel);
     }
 
     @GetMapping(value = "/{id}")
@@ -41,7 +42,7 @@ public class CategoryResource {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<CategoryDTO> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
@@ -53,6 +54,4 @@ public class CategoryResource {
                 .buildAndExpand(dto.getId()).toUri();
         return ResponseEntity.created(uri).body(dto);
     }
-
-
 }

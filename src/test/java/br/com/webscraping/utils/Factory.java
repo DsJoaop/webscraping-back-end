@@ -16,16 +16,65 @@ import java.util.List;
 
 public class Factory {
 
+    private static long productId = 1L;
+    private static long categoryId = 1L;
+    private static long pharmacyId = 1L;
+
     public static Product createProduct() {
-        return createProduct(1, createCategory(1));
+        Product product = new Product();
+        product.setId(productId++);
+        product.setName("Product Name");
+        product.setDescription("Product Description");
+        product.setPrice(100.0);
+        product.setImgUrl("http://img.com/img.png");
+        product.setUrl("http://product.com/");
+        product.setCreatedAt(Instant.now());
+        product.setUpdatedAt(Instant.now());
+
+        // Cria uma categoria e associa ao produto
+        Category category = new Category();
+        category.setId(1L);
+        category.setName("Category Name");
+        category.setUrl("https://category.com/");
+
+        return product;
     }
 
     public static Category createCategory() {
-        return createCategory(1);
+        Category category = new Category();
+        category.setId(categoryId++);
+        category.setName("Category Name");
+        category.setUrl("https://category.com/");
+
+        // Cria um produto e adiciona à categoria
+        Product product = createProductAUX(category);
+        category.getProducts().add(product);
+        product.setCategory(category);
+
+        return category;
     }
 
     public static Pharmacy createPharmacy() {
-        return createPharmacy(1);
+        Pharmacy pharmacy = new Pharmacy();
+        pharmacy.setId(pharmacyId++);
+        pharmacy.setName("Pharmacy Name");
+        pharmacy.setAddress("1234 Pharmacy St");
+        pharmacy.setPhone("(123) 456-7890");
+        pharmacy.setCity("City Name");
+        pharmacy.setState("State Name");
+        pharmacy.setZipCode("12345-678");
+        pharmacy.setUrl("https://pharmacy.com");
+        pharmacy.setImgUrl("https://pharmacy.com/logo.png");
+        pharmacy.setCreatedAt(Instant.now());
+        pharmacy.setUpdatedAt(Instant.now());
+
+        // Cria uma categoria e adiciona à farmácia
+        Category category = createCategory();
+        List<Category> categories = new ArrayList<>();
+        categories.add(category);
+        pharmacy.setCategories(categories);
+
+        return pharmacy;
     }
 
     public static ProductDTO createProductDTO() {
@@ -40,72 +89,18 @@ public class Factory {
         return PharmacyConverter.toDto(createPharmacy());
     }
 
-    public static Pharmacy createPharmacy(int id) {
-        Pharmacy pharmacy = new Pharmacy();
-        pharmacy.setId((long) id);
-        pharmacy.setName("Pharmacy Name");
-        pharmacy.setAddress("1234 Pharmacy St");
-        pharmacy.setPhone("(123) 456-7890");
-        pharmacy.setCity("City Name");
-        pharmacy.setState("State Name");
-        pharmacy.setZipCode("12345-678");
-        pharmacy.setUrl("http://pharmacy.com");
-        pharmacy.setImgUrl("http://pharmacy.com/logo.png");
-        pharmacy.setCreatedAt(Instant.now());
-        pharmacy.setUpdatedAt(Instant.now());
-
-        List<Category> categories = createCategories(4, pharmacy);
-        pharmacy.setCategories(categories);
-
-        return pharmacy;
-    }
-
-    private static Product createProduct(int id, Category category) {
+    private static Product createProductAUX(Category category) {
         Product product = new Product();
-        populateProductFields(product, id);
-
-        // Associa a categoria ao produto se fornecida
-        if (category != null) {
-            product.setCategory(category);
-            category.getProducts().add(product);
-        }
-
-        return product;
-    }
-
-    private static void populateProductFields(Product product, int id) {
-        product.setId((long) id);
-        product.setName("Product Name " + id);
-        product.setDescription("Product Description " + id);
-        product.setPrice(100.0 + id);
-        product.setImgUrl("http://img.com/img" + id + ".png");
-        product.setUrl("http://product.com/" + id);
+        product.setId(productId++);
+        product.setName("Product Name");
+        product.setDescription("Product Description");
+        product.setPrice(100.0);
+        product.setImgUrl("http://img.com/img.png");
+        product.setUrl("http://product.com/");
         product.setCreatedAt(Instant.now());
         product.setUpdatedAt(Instant.now());
-    }
+        product.setCategory(category);
 
-    public static Category createCategory(int id) {
-        Category category = new Category();
-        category.setId((long) id);
-        category.setName("Category Name " + id);
-        category.setUrl("https://category.com/" + id);
-
-        List<Product> products = new ArrayList<>();
-        for (int i = 1; i <= 4; i++) {
-            products.add(createProduct(i, category));
-        }
-        category.setProducts(products);
-
-        return category;
-    }
-
-    private static List<Category> createCategories(int numberOfCategories, Pharmacy pharmacy) {
-        List<Category> categories = new ArrayList<>();
-        for (int i = 1; i <= numberOfCategories; i++) {
-            Category category = createCategory(i);
-            category.setPharmacy(pharmacy);
-            categories.add(category);
-        }
-        return categories;
+        return product;
     }
 }

@@ -80,7 +80,7 @@ public class CategoryService {
     }
 
     @Transactional(readOnly = true)
-    public Page<CategoryDTO> findAllPage(Pageable pageRequest) {
+    public Page<CategoryDTO> findAllPaged(Pageable pageRequest) {
         Page<Category> list = repository.findAll(pageRequest);
         return list.map(mapper::toDto);
     }
@@ -91,12 +91,14 @@ public class CategoryService {
             for (ProductDTO productDTO : dto.getProducts()) {
                 Optional<Product> productOpt = productRepository.findById(productDTO.getId());
                 if (productOpt.isPresent()) {
-                    entity.getProducts().add(productOpt.get());
-                    productOpt.get().setCategory(entity);
+                    Product product = productOpt.get();
+                    product.setCategory(entity);
+                    entity.getProducts().add(product);
                 }
             }
         }
     }
+
 
     private void copyDtoToEntitySubcategories(CategoryDTO dto, Category entity) {
         if (dto.getSubcategories() != null) {
@@ -105,7 +107,7 @@ public class CategoryService {
                 Category subcategory;
                 if (subcategoryDTO.getId() != null) {
                     subcategory = repository.findById(subcategoryDTO.getId())
-                            .orElseThrow(() -> new ResourceNotFoundException("Subcategory not found with id: " + subcategoryDTO.getId()));
+                            .orElseThrow(() -> new ResourceNotFoundException("Subcategory not found"));
                 } else {
                     subcategory = mapper.toEntity(subcategoryDTO);
                 }
@@ -114,5 +116,4 @@ public class CategoryService {
             }
         }
     }
-
 }

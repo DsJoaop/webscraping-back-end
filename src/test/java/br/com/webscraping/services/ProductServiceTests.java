@@ -133,9 +133,9 @@ public class ProductServiceTests {
     }
 
     @Test
-    public void findAllPageShouldReturnPage() {
+    public void findAllPageShouldReturnPaged() {
         Pageable pageable = PageRequest.of(0, 10);
-        service.findAllPage(pageable);
+        service.findAllPaged(pageable);
         Mockito.verify(repository, Mockito.times(1)).findAll(pageable);
     }
 }

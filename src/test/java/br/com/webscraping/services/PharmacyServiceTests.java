@@ -122,9 +122,9 @@ public class PharmacyServiceTests {
     }
 
     @Test
-    public void findAllPageShouldReturnPage() {
+    public void findAllPageShouldReturnPaged() {
         Pageable pageable = PageRequest.of(0, 10);
-        service.findAllPage(pageable);
+        service.findAllPaged(pageable);
         verify(repository, times(1)).findAll(pageable);
     }
 }

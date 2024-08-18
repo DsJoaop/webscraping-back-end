@@ -79,7 +79,7 @@ public class PharmacyService {
     }
 
     @Transactional(readOnly = true)
-    public Page<PharmacyDTO> findAllPage(Pageable pageRequest) {
+    public Page<PharmacyDTO> findAllPaged(Pageable pageRequest) {
         Page<Pharmacy> list = repository.findAll(pageRequest);
         return list.map(mapper::toDto);
     }

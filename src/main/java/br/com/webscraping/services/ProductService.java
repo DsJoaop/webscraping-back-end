@@ -73,7 +73,7 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductDTO> findAllPage(Pageable pageRequest) {
+    public Page<ProductDTO> findAllPaged(Pageable pageRequest) {
         Page<Product> list = repository.findAll(pageRequest);
         return list.map(mapper::toDto);
     }

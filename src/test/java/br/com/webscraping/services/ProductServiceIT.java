@@ -46,10 +46,10 @@ public class ProductServiceIT {
     }
 
     @Test
-    public void findAllPagedShouldReturnPageWhenPage0Size10() {
+    public void findAllPagedShouldReturnPageWhenPaged0Size10() {
         PageRequest pageRequest = PageRequest.of(0, 10);
 
-        Page<ProductDTO> result = service.findAllPage(pageRequest);
+        Page<ProductDTO> result = service.findAllPaged(pageRequest);
 
         Assertions.assertFalse(result.isEmpty());
         Assertions.assertEquals(0, result.getNumber());
@@ -58,19 +58,19 @@ public class ProductServiceIT {
     }
 
     @Test
-    public void findAllPagedShouldReturnEmptyPageWhenPageDoesNotExist() {
+    public void findAllPagedShouldReturnEmptyPageWhenPagedDoesNotExist() {
         PageRequest pageRequest = PageRequest.of(50, 10);
 
-        Page<ProductDTO> result = service.findAllPage(pageRequest);
+        Page<ProductDTO> result = service.findAllPaged(pageRequest);
 
         Assertions.assertTrue(result.isEmpty());
     }
 
     @Test
-    public void findAllPagedShouldReturnSortedPageWhenSortByName() {
+    public void findAllPagedShouldReturnSortedPagedWhenSortByName() {
         PageRequest pageRequest = PageRequest.of(0, 10, Sort.by("name"));
 
-        Page<ProductDTO> result = service.findAllPage(pageRequest);
+        Page<ProductDTO> result = service.findAllPaged(pageRequest);
 
         Assertions.assertFalse(result.isEmpty());
         Assertions.assertEquals("Antisséptico Bucal 250ml", result.getContent().get(0).getName());
