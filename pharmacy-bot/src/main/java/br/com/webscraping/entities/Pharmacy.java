@@ -1,4 +1,4 @@
-package com.webscraping.botpharmacy.entities;
+package br.com.webscraping.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -10,11 +10,11 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
 @Entity
-@Table(name = "tb_category")
+@Table(name = "tb_pharmacy")
+@Data
 @NoArgsConstructor
-public class Category implements Serializable {
+public class Pharmacy implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -26,8 +26,19 @@ public class Category implements Serializable {
     @Column(nullable = false)
     private String name;
 
+    private String address;
+
     @Column(nullable = false)
+    private String phone;
+    private String city;
+    private String state;
+    private String zipCode;
     private String url;
+    private String imgUrl;
+
+    @OneToMany(mappedBy = "pharmacy", fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Category> categories = new ArrayList<>();
 
     @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
     private Instant createdAt;
@@ -35,21 +46,6 @@ public class Category implements Serializable {
     @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
     private Instant updatedAt;
 
-    @OneToMany(mappedBy = "parentCategory", fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Category> subcategories = new ArrayList<>();
-
-    @ManyToOne
-    @JoinColumn(name = "parent_category_id")
-    private Category parentCategory;
-
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Product> products = new ArrayList<>();
-
-    @ManyToOne
-    @JoinColumn(name = "pharmacy_id")
-    private Pharmacy pharmacy;
 
     @PrePersist
     public void prePersist() {
@@ -60,4 +56,5 @@ public class Category implements Serializable {
     public void preUpdate() {
         updatedAt = Instant.now();
     }
+
 }

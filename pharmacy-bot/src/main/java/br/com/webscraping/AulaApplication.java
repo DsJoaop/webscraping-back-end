@@ -1,13 +1,12 @@
-package com.webscraping.botpharmacy;
+package br.com.webscraping;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class BotPharmacyApplication {
+public class AulaApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BotPharmacyApplication.class, args);
+		SpringApplication.run(AulaApplication.class, args);
 	}
-
 }

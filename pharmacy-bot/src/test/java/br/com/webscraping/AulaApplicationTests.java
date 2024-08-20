@@ -1,10 +1,10 @@
-package com.webscraping.botpharmacy;
+package br.com.webscraping;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class BotPharmacyApplicationTests {
+class AulaApplicationTests {
 
 	@Test
 	void contextLoads() {

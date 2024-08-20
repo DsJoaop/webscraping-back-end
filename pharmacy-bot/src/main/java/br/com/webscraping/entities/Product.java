@@ -1,4 +1,4 @@
-package com.webscraping.botpharmacy.entities;
+package br.com.webscraping.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
