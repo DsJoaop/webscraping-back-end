@@ -6,7 +6,7 @@ import br.com.webscraping.entities.Pharmacy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(uses = CategoryMapper.class)
+@Mapper(componentModel = "spring", uses = CategoryMapper.class)
 public interface PharmacyMapper extends EntityMapper<PharmacyDTO, Pharmacy> {
 
     @Override

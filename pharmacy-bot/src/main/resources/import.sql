@@ -1,13 +1,3 @@
-INSERT INTO tb_user (first_name, last_name, email, password) VALUES ('João', 'Silva', 'joaopaulo@gmail.com', '$2a$10$3Zz9Zz9Zz9Zz9Zz9Zz9ZzO');
-INSERT INTO tb_user (first_name, last_name, email, password) VALUES ('Maria', 'Silva', 'maria@gmail.com', '$2a$10$3Zz9Zz9Zz9Zz9Zz9Zz9ZzO');
-
-INSERT INTO tb_role (authority) VALUES ('ROLE_OPERATOR');
-INSERT INTO tb_role (authority) VALUES ('ROLE_ADMIN');
-
-INSERT INTO tb_user_role (user_id, role_id) VALUES (1, 1);
-INSERT INTO tb_user_role (user_id, role_id) VALUES (2, 1);
-INSERT INTO tb_user_role (user_id, role_id) VALUES (2, 2);
-
 INSERT INTO tb_pharmacy (name, address, phone, city, state, zip_code, url, img_url, created_at) VALUES ('Farmacia Central', 'Rua Principal, 123', '123456789', 'Cidade A', 'Estado A', '12345-678', 'farmaciacentral.com.br', 'farmaciacentral.jpg', NOW());
 INSERT INTO tb_pharmacy (name, address, phone, city, state, zip_code, url, img_url, created_at) VALUES ('Farmacia Popular', 'Avenida Secundária, 456', '987654321', 'Cidade B', 'Estado B', '87654-321', 'farmaciapopular.com.br', 'farmaciapopular.jpg', NOW());
 

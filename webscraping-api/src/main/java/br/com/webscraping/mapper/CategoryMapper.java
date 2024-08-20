@@ -5,7 +5,7 @@ import br.com.webscraping.entities.Category;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(uses = {ProductMapper.class, CategoryMapper.class})
+@Mapper(componentModel = "spring", uses = {ProductMapper.class, CategoryMapper.class})
 public interface CategoryMapper extends EntityMapper<CategoryDTO, Category> {
 
     @Override
