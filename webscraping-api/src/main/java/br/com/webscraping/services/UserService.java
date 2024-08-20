@@ -3,6 +3,7 @@ package br.com.webscraping.services;
 import br.com.webscraping.dto.RoleDTO;
 import br.com.webscraping.dto.UserDTO;
 import br.com.webscraping.dto.UserInsertDTO;
+import br.com.webscraping.dto.UserUpdateDTO;
 import br.com.webscraping.entities.Role;
 import br.com.webscraping.entities.User;
 import br.com.webscraping.exceptions.DatabaseException;
@@ -55,7 +56,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserDTO update(Long id, UserDTO dto) {
+    public UserDTO update(Long id, UserUpdateDTO dto) {
         if (!repository.existsById(id)) {
             throw new ResourceNotFoundException("Id not found " + id);
         }

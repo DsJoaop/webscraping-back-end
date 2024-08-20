@@ -1,15 +1,15 @@
 package br.com.webscraping.dto;
 
 import br.com.webscraping.services.validation.UserInsertValid;
+import br.com.webscraping.services.validation.UserUpdateValid;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 
-@UserInsertValid
+@UserUpdateValid
 @EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
-public class UserInsertDTO extends UserDTO {
-    private String password;
+public class UserUpdateDTO extends UserDTO {
 }
