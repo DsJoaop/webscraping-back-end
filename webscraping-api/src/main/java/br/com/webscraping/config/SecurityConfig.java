@@ -13,7 +13,10 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable);
+        http.csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth
+                        .anyRequest().permitAll()) // Permitir todas as requisições
+                .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin())); // Permitir que o H2 Console seja carregado em um iframe
         return http.build();
     }
 }
