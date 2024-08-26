@@ -3,7 +3,6 @@ package br.com.webscraping.resources;
 import br.com.webscraping.dto.CategoryDTO;
 import br.com.webscraping.services.CategoryService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;

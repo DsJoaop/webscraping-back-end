@@ -24,7 +24,6 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
-
     private final CategoryRepository repository;
     private final CategoryMapper mapper;
     private final ProductRepository productRepository;

@@ -3,7 +3,6 @@ package br.com.webscraping.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
@@ -33,6 +32,24 @@ public class Product implements Serializable {
 
     @Column(nullable = false)
     private String url;
+
+    private String brand;
+
+    private String quantity;
+
+    @Column(nullable = false)
+    private double rating;
+
+    @Column(nullable = false)
+    private int reviewsCount;
+
+    @Column(nullable = false)
+    private double priceFrom;
+
+    @Column(nullable = false)
+    private double priceFinal;
+
+    private double discount;
 
     @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
     private Instant createdAt;

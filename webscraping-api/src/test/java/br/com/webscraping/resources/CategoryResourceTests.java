@@ -1,6 +1,6 @@
 package br.com.webscraping.resources;
 
-import br.com.webscraping.config.SecurityConfig;
+import br.com.webscraping.config.AuthorizationServerConfig;
 import br.com.webscraping.dto.CategoryDTO;
 import br.com.webscraping.exceptions.DatabaseException;
 import br.com.webscraping.exceptions.ResourceNotFoundException;
@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(CategoryResource.class)
-@Import(SecurityConfig.class)
+@Import(AuthorizationServerConfig.class)
 public class CategoryResourceTests {
 
     @Autowired

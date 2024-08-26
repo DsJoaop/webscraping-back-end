@@ -3,6 +3,7 @@ package br.com.webscraping.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -10,8 +11,8 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
 @Entity
+@Data
 @Table(name = "tb_category")
 @NoArgsConstructor
 public class Category implements Serializable {

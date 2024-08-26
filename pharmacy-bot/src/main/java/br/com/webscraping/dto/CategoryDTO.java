@@ -2,6 +2,7 @@ package br.com.webscraping.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -19,4 +20,11 @@ public class CategoryDTO implements Serializable {
     private String url;
     private List<ProductDTO> products = new ArrayList<>();
     private List<CategoryDTO> subcategories = new ArrayList<>();
+
+
+    public CategoryDTO(String name, String url, List<CategoryDTO> subcategories) {
+        this.name = name;
+        this.url = url;
+        this.subcategories = subcategories;
+    }
 }

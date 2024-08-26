@@ -17,6 +17,13 @@ public class ProductConverter {
         productDTO.setPrice(product.getPrice());
         productDTO.setImgUrl(product.getImgUrl());
         productDTO.setUrl(product.getUrl());
+        productDTO.setBrand(product.getBrand());
+        productDTO.setQuantity(product.getQuantity());
+        productDTO.setRating(product.getRating());
+        productDTO.setReviewsCount(product.getReviewsCount());
+        productDTO.setPriceFrom(product.getPriceFrom());
+        productDTO.setPriceFinal(product.getPriceFinal());
+        productDTO.setDiscount(product.getDiscount());
 
         return productDTO;
     }
@@ -33,6 +40,13 @@ public class ProductConverter {
         product.setPrice(productDTO.getPrice());
         product.setImgUrl(productDTO.getImgUrl());
         product.setUrl(productDTO.getUrl());
+        product.setBrand(productDTO.getBrand());
+        product.setQuantity(productDTO.getQuantity());
+        product.setRating(productDTO.getRating());
+        product.setReviewsCount(productDTO.getReviewsCount());
+        product.setPriceFrom(productDTO.getPriceFrom());
+        product.setPriceFinal(productDTO.getPriceFinal());
+        product.setDiscount(productDTO.getDiscount());
 
         return product;
     }
