@@ -25,11 +25,15 @@ public class Factory {
         product.setId(productId++);
         product.setName("Product Name");
         product.setDescription("Product Description");
-        product.setPrice(100.0);
+        product.setPriceFinal(100.0);
         product.setImgUrl("http://img.com/img.png");
         product.setUrl("http://product.com/");
         product.setCreatedAt(Instant.now());
         product.setUpdatedAt(Instant.now());
+        product.setRating(1.0);
+        product.setReviewsCount(1);
+        product.setPriceFrom(10.0);
+
 
         // Cria uma categoria e associa ao produto
         Category category = new Category();
@@ -94,12 +98,16 @@ public class Factory {
         product.setId(productId++);
         product.setName("Product Name");
         product.setDescription("Product Description");
-        product.setPrice(100.0);
+        product.setPriceFinal(100.0);
         product.setImgUrl("http://img.com/img.png");
         product.setUrl("http://product.com/");
         product.setCreatedAt(Instant.now());
         product.setUpdatedAt(Instant.now());
         product.setCategory(category);
+        product.setRating(1.0);
+        product.setReviewsCount(1);
+        product.setPriceFrom(10.0);
+
 
         return product;
     }

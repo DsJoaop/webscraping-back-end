@@ -10,8 +10,8 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
 @Entity
+@Data
 @Table(name = "tb_category")
 @NoArgsConstructor
 public class Category implements Serializable {
@@ -61,3 +61,4 @@ public class Category implements Serializable {
         updatedAt = Instant.now();
     }
 }
+

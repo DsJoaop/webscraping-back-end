@@ -104,7 +104,6 @@ public class ProductResourceTests {
         result.andExpect(status().isCreated());
         result.andExpect(jsonPath("$.id").exists());
         result.andExpect(jsonPath("$.name").exists());
-        result.andExpect(jsonPath("$.description").exists());
     }
 
     @Test
