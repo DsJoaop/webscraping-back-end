@@ -6,6 +6,6 @@ import br.com.webscraping.dto.ProductDTO;
 import java.util.List;
 
 public interface ScraperStrategy {
-    List<CategoryDTO> scrapeCategories();
-    List<ProductDTO> scrapeProducts();
+    List<CategoryDTO> scrapeCategories() throws Exception;
+    List<ProductDTO> scrapeProductsByCategory(CategoryDTO categoryLink) throws Exception;
 }

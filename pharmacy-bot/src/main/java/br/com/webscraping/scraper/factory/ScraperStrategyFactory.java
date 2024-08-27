@@ -14,6 +14,6 @@ public class ScraperStrategyFactory {
     }
 
     public ScraperStrategy getStrategy(String pharmacyName) {
-        return strategies.get(pharmacyName.toLowerCase());
+        return strategies.get(pharmacyName.toLowerCase() + "ScraperStrategy");
     }
 }

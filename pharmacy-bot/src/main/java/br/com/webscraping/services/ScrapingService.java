@@ -6,6 +6,7 @@ import br.com.webscraping.dto.ProductDTO;
 import br.com.webscraping.scraper.factory.ScraperStrategy;
 import br.com.webscraping.scraper.factory.ScraperStrategyFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.annotation.Order;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -14,13 +15,13 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ScrapingService {
-
     private final ScraperStrategyFactory scraperStrategyFactory;
     private final PharmacyService pharmacyService;
     private final CategoryService categoryService;
     private final ProductService productService;
 
     @Scheduled(fixedDelay = 36000000)
+    @Order(1)
     public void scrapingCategory() {
         try {
             List<PharmacyDTO> listParmacies = pharmacyService.findAll();
@@ -37,15 +38,19 @@ public class ScrapingService {
         }
     }
 
-    @Scheduled(fixedDelay = 18000000)
+    //@Scheduled(fixedDelay = 18000000)
+    @Order(2)
     public void scrapingProduct() {
         try {
             List<PharmacyDTO> listParmacies = pharmacyService.findAll();
+            List<CategoryDTO> listCategories = categoryService.findAll();
             for (PharmacyDTO pharmacyDTO : listParmacies) {
                 ScraperStrategy strategy = scraperStrategyFactory.getStrategy(pharmacyDTO.getName());
-                List<ProductDTO> products = strategy.scrapeProducts();
-                for (ProductDTO productDTO : products) {
-                    productService.insert(productDTO);
+                for (CategoryDTO categoryDTO : listCategories) {
+                    List<ProductDTO> products = strategy.scrapeProductsByCategory(categoryDTO);
+                    for (ProductDTO productDTO : products) {
+                        productService.insert(productDTO);
+                    }
                 }
             }
             System.out.println("Produtos atualizados com sucesso!");

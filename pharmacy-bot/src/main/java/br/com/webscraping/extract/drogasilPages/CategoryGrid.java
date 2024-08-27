@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
+//https://www.drogasil.com.br/categorias
 @Component
 public class CategoryGrid extends BasePage {
     private static final Logger LOGGER = Logger.getLogger(CategoryGrid.class.getName());

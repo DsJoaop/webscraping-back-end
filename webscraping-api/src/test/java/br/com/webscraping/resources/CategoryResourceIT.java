@@ -4,15 +4,14 @@ package br.com.webscraping.resources;
 import br.com.webscraping.repositories.CategoryRepository;
 import br.com.webscraping.services.CategoryService;
 import br.com.webscraping.utils.Factory;
+import br.com.webscraping.utils.TokenUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,31 +36,43 @@ public class CategoryResourceIT {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private TokenUtil tokenUtil;
+
+    private String username, password, bearerToken;
+
     private Long existingId;
     private Long nonExistingId;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
         existingId = 1L;
         nonExistingId = 100L;
+        username = "maria@gmail.com";
+        password = "123456";
+
+        bearerToken = tokenUtil.obtainAccessToken(mockMvc, username, password);
     }
 
     @Test
     public void deleteShouldDeleteObjectWhenIdExists() throws Exception {
-        ResultActions result = mockMvc.perform(delete("/categories/{id}", existingId));
+        ResultActions result = mockMvc.perform(delete("/categories/{id}", existingId)
+                .header("Authorization", "Bearer " + bearerToken));
         result.andExpect(status().isNoContent());
     }
 
     @Test
     public void deleteShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
-        ResultActions result = mockMvc.perform(delete("/categories/{id}", nonExistingId));
+        ResultActions result = mockMvc.perform(delete("/categories/{id}", nonExistingId)
+                .header("Authorization", "Bearer " + bearerToken));
         result.andExpect(status().isNotFound());
     }
 
     @Test
     public void findAllShouldReturnPageWhenPage0Size10() throws Exception {
         ResultActions result = mockMvc.perform(get("/categories?page=0&size=10")
-                .accept(MediaType.APPLICATION_JSON));
+                .accept(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + bearerToken));
         result.andExpect(status().isOk());
     }
 
@@ -82,6 +93,7 @@ public class CategoryResourceIT {
     @Test
     public void insertShouldReturnCategoryDTOCreated() throws Exception {
         ResultActions result = mockMvc.perform(post("/categories")
+                .header("Authorization", "Bearer " + bearerToken)
                 .content(objectMapper.writeValueAsString(Factory.createCategoryDTO()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
@@ -91,6 +103,7 @@ public class CategoryResourceIT {
     @Test
     public void updateShouldReturnCategoryDTOWhenIdExists() throws Exception {
         ResultActions result = mockMvc.perform(put("/categories/{id}", existingId)
+                .header("Authorization", "Bearer " + bearerToken)
                 .content(objectMapper.writeValueAsString(Factory.createCategoryDTO()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
@@ -100,6 +113,7 @@ public class CategoryResourceIT {
     @Test
     public void updateShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
         ResultActions result = mockMvc.perform(put("/categories/{id}", nonExistingId)
+                .header("Authorization", "Bearer " + bearerToken)
                 .content(objectMapper.writeValueAsString(Factory.createCategoryDTO()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));

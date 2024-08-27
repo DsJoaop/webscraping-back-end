@@ -3,6 +3,8 @@ package br.com.webscraping.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -11,7 +13,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "tb_role")
 @NoArgsConstructor
-public class Role implements Serializable {
+public class Role implements GrantedAuthority, Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -19,5 +21,17 @@ public class Role implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String authority;
+
+    public Role(Long roleId, String authority) {
+        this.id = roleId;
+        this.authority = authority;
+    }
+
+    @Override
+    public String getAuthority() {
+        return authority;
+    }
+
+
 
 }

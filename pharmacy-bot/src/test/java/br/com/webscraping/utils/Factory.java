@@ -25,7 +25,7 @@ public class Factory {
         product.setId(productId++);
         product.setName("Product Name");
         product.setDescription("Product Description");
-        product.setPrice(100.0);
+        product.setPriceFinal(100.0);
         product.setImgUrl("http://img.com/img.png");
         product.setUrl("http://product.com/");
         product.setCreatedAt(Instant.now());
@@ -94,7 +94,7 @@ public class Factory {
         product.setId(productId++);
         product.setName("Product Name");
         product.setDescription("Product Description");
-        product.setPrice(100.0);
+        product.setPriceFinal(100.0);
         product.setImgUrl("http://img.com/img.png");
         product.setUrl("http://product.com/");
         product.setCreatedAt(Instant.now());

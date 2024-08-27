@@ -29,7 +29,7 @@ public class PlaywrightConfig {
     }
 
     @Bean
-    public Page page(BrowserContext browserContext) {
+    public Page createPage(BrowserContext browserContext) {
         Page page = browserContext.newPage();
         page.setDefaultNavigationTimeout(120000);
         return page;

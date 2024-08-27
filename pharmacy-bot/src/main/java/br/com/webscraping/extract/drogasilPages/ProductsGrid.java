@@ -7,12 +7,14 @@ import br.com.webscraping.extract.basePage.BasePage;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.TimeoutError;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@Component
 public class ProductsGrid extends BasePage {
     private static final Logger LOGGER = Logger.getLogger(ProductsGrid.class.getName());
     private static final int MAX_RETRIES = 3;

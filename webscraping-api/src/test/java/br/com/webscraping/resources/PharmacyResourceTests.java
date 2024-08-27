@@ -1,6 +1,5 @@
 package br.com.webscraping.resources;
 
-import br.com.webscraping.config.AuthorizationServerConfig;
 import br.com.webscraping.dto.PharmacyDTO;
 import br.com.webscraping.exceptions.DatabaseException;
 import br.com.webscraping.exceptions.ResourceNotFoundException;
@@ -11,9 +10,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -27,8 +26,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(PharmacyResource.class)
-@Import(AuthorizationServerConfig.class)
+@WebMvcTest(value = PharmacyResource.class, excludeAutoConfiguration = {SecurityAutoConfiguration.class})
 public class PharmacyResourceTests {
 
     @Autowired
@@ -68,28 +66,24 @@ public class PharmacyResourceTests {
     }
 
     @Test
-    @WithMockUser(username = "user", roles = {"USER"})
     public void deleteShouldReturnDatabaseExceptionWhenIdDependent() throws Exception {
         ResultActions result = mockMvc.perform(delete("/pharmacies/{id}", dependentId));
         result.andExpect(status().isBadRequest());
     }
 
     @Test
-    @WithMockUser(username = "user", roles = {"USER"})
     public void deleteShouldReturnNoContentWhenIdExists() throws Exception {
         ResultActions result = mockMvc.perform(delete("/pharmacies/{id}", existingId));
         result.andExpect(status().isNoContent());
     }
 
     @Test
-    @WithMockUser(username = "user", roles = {"USER"})
     public void deleteShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
         ResultActions result = mockMvc.perform(delete("/pharmacies/{id}", nonExistingId));
         result.andExpect(status().isNotFound());
     }
 
     @Test
-    @WithMockUser(username = "user", roles = {"USER"})
     public void insertShouldReturnPharmacyDTOCreated() throws Exception {
         String jsonBody = objectMapper.writeValueAsString(pharmacyDTO);
         ResultActions result = mockMvc.perform(post("/pharmacies")
@@ -104,7 +98,6 @@ public class PharmacyResourceTests {
     }
 
     @Test
-    @WithMockUser(username = "user", roles = {"USER"})
     public void updateShouldReturnPharmacyDTOWhenIdExists() throws Exception {
         String jsonBody = objectMapper.writeValueAsString(pharmacyDTO);
         ResultActions result = mockMvc.perform(put("/pharmacies/{id}", existingId)
@@ -119,7 +112,6 @@ public class PharmacyResourceTests {
     }
 
     @Test
-    @WithMockUser(username = "user", roles = {"USER"})
     public void updateShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
         String jsonBody = objectMapper.writeValueAsString(pharmacyDTO);
         ResultActions result = mockMvc.perform(put("/pharmacies/{id}", nonExistingId)
@@ -131,13 +123,11 @@ public class PharmacyResourceTests {
     }
 
     @Test
-    @WithMockUser(username = "user", roles = {"USER"})
     public void findAllShouldReturnPage() throws Exception {
         mockMvc.perform(get("/pharmacies").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
     }
 
     @Test
-    @WithMockUser(username = "user", roles = {"USER"})
     public void findByIdShouldReturnPharmacyWhenIdExists() throws Exception {
         ResultActions result = mockMvc.perform(get("/pharmacies/{id}", existingId).accept(MediaType.APPLICATION_JSON));
         result.andExpect(status().isOk());
@@ -147,7 +137,6 @@ public class PharmacyResourceTests {
     }
 
     @Test
-    @WithMockUser(username = "user", roles = {"USER"})
     public void findByIdShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
         mockMvc.perform(get("/pharmacies/{id}", nonExistingId).accept(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
     }

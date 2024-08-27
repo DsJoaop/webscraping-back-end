@@ -25,9 +25,6 @@ public class Product implements Serializable {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(nullable = false)
-    private double price;
-
     private String imgUrl;
 
     @Column(nullable = false)
@@ -49,6 +46,7 @@ public class Product implements Serializable {
     @Column(nullable = false)
     private double priceFinal;
 
+    @Column
     private double discount;
 
     @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")

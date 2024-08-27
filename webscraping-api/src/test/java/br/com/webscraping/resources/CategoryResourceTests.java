@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
@@ -27,8 +28,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(CategoryResource.class)
-@Import(AuthorizationServerConfig.class)
+@WebMvcTest(value = CategoryResource.class, excludeAutoConfiguration = {SecurityAutoConfiguration.class})
 public class CategoryResourceTests {
 
     @Autowired
@@ -68,28 +68,24 @@ public class CategoryResourceTests {
     }
 
     @Test
-    @WithMockUser(username = "user", roles = {"USER"})
     public void deleteShouldReturnDatabaseExceptionWhenIdDependent() throws Exception {
         ResultActions result = mockMvc.perform(delete("/categories/{id}", dependentId));
         result.andExpect(status().isBadRequest());
     }
 
     @Test
-    @WithMockUser(username = "user", roles = {"USER"})
     public void deleteShouldReturnNoContentWhenIdExists() throws Exception {
         ResultActions result = mockMvc.perform(delete("/categories/{id}", existingId));
         result.andExpect(status().isNoContent());
     }
 
     @Test
-    @WithMockUser(username = "user", roles = {"USER"})
     public void deleteShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
         ResultActions result = mockMvc.perform(delete("/categories/{id}", nonExistingId));
         result.andExpect(status().isNotFound());
     }
 
     @Test
-    @WithMockUser(username = "user", roles = {"USER"})
     public void insertShouldReturnCategoryDTOCreated() throws Exception {
         String jsonBody = objectMapper.writeValueAsString(categoryDTO);
         ResultActions result = mockMvc.perform(post("/categories")
@@ -104,7 +100,6 @@ public class CategoryResourceTests {
     }
 
     @Test
-    @WithMockUser(username = "user", roles = {"USER"})
     public void updateShouldReturnCategoryDTOWhenIdExists() throws Exception {
         String jsonBody = objectMapper.writeValueAsString(categoryDTO);
         ResultActions result = mockMvc.perform(put("/categories/{id}", existingId)
@@ -119,7 +114,6 @@ public class CategoryResourceTests {
     }
 
     @Test
-    @WithMockUser(username = "user", roles = {"USER"})
     public void updateShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
         String jsonBody = objectMapper.writeValueAsString(categoryDTO);
         ResultActions result = mockMvc.perform(put("/categories/{id}", nonExistingId)
@@ -131,13 +125,11 @@ public class CategoryResourceTests {
     }
 
     @Test
-    @WithMockUser(username = "user", roles = {"USER"})
     public void findAllShouldReturnPage() throws Exception {
         mockMvc.perform(get("/categories").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
     }
 
     @Test
-    @WithMockUser(username = "user", roles = {"USER"})
     public void findByIdShouldReturnCategoryWhenIdExists() throws Exception {
         ResultActions result = mockMvc.perform(get("/categories/{id}", existingId).accept(MediaType.APPLICATION_JSON));
         result.andExpect(status().isOk());
@@ -147,7 +139,6 @@ public class CategoryResourceTests {
     }
 
     @Test
-    @WithMockUser(username = "user", roles = {"USER"})
     public void findByIdShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
         mockMvc.perform(get("/categories/{id}", nonExistingId).accept(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
     }

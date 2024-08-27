@@ -1,6 +1,6 @@
 package br.com.webscraping.resources;
 
-import br.com.webscraping.config.AuthorizationServerConfig;
+
 import br.com.webscraping.dto.ProductDTO;
 import br.com.webscraping.exceptions.DatabaseException;
 import br.com.webscraping.exceptions.ResourceNotFoundException;
@@ -11,15 +11,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -30,8 +29,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(ProductResource.class)
-@Import(AuthorizationServerConfig.class)
+@WebMvcTest(value = ProductResource.class, excludeAutoConfiguration = {SecurityAutoConfiguration.class})
 public class ProductResourceTests {
 
     @Autowired
@@ -78,28 +76,24 @@ public class ProductResourceTests {
     }
 
     @Test
-    @WithMockUser(username = "user", roles = {"USER"})
     public void deleteShouldReturnDatabaseExceptionWhenIdDependent() throws Exception {
         ResultActions result = mockMvc.perform(delete("/products/{id}", dependentId));
         result.andExpect(status().isBadRequest());
     }
 
     @Test
-    @WithMockUser(username = "user", roles = {"USER"})
     public void deleteShouldReturnNoContentWhenIdExists() throws Exception {
         ResultActions result = mockMvc.perform(delete("/products/{id}", existingId));
         result.andExpect(status().isNoContent());
     }
 
     @Test
-    @WithMockUser(username = "user", roles = {"USER"})
     public void deleteShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
         ResultActions result = mockMvc.perform(delete("/products/{id}", nonExistingId));
         result.andExpect(status().isNotFound());
     }
 
     @Test
-    @WithMockUser(username = "user", roles = {"USER"})
     public void insertShouldReturnProductDTOCreated() throws Exception {
         String jsonBody = objectMapper.writeValueAsString(productDTO);
         ResultActions result = mockMvc.perform(post("/products")
@@ -114,7 +108,6 @@ public class ProductResourceTests {
     }
 
     @Test
-    @WithMockUser(username = "user", roles = {"USER"})
     public void updateShouldReturnProductDTOWhenIdExists() throws Exception {
         String jsonBody = objectMapper.writeValueAsString(productDTO);
         ResultActions result = mockMvc.perform(put("/products/{id}", existingId)
@@ -129,7 +122,6 @@ public class ProductResourceTests {
     }
 
     @Test
-    @WithMockUser(username = "user", roles = {"USER"})
     public void updateShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
         String jsonBody = objectMapper.writeValueAsString(productDTO);
         ResultActions result = mockMvc.perform(put("/products/{id}", nonExistingId)
@@ -141,7 +133,6 @@ public class ProductResourceTests {
     }
 
     @Test
-    @WithMockUser(username = "user", roles = {"USER"})
     public void findAllShouldReturnPage() throws Exception {
         mockMvc.perform(get("/products")
                         .accept(MediaType.APPLICATION_JSON))
@@ -149,7 +140,6 @@ public class ProductResourceTests {
     }
 
     @Test
-    @WithMockUser(username = "user", roles = {"USER"})
     public void findByIdShouldReturnProductWhenIdExists() throws Exception {
         ResultActions result = mockMvc.perform(get("/products/{id}", existingId)
                 .accept(MediaType.APPLICATION_JSON));
@@ -161,7 +151,6 @@ public class ProductResourceTests {
     }
 
     @Test
-    @WithMockUser(username = "user", roles = {"USER"})
     public void findByIdShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
         mockMvc.perform(get("/products/{id}", nonExistingId)
                         .accept(MediaType.APPLICATION_JSON))

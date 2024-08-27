@@ -17,9 +17,6 @@ public class ProductDTO {
 
     private String description;
 
-    @Positive(message = "Price must be a positive value")
-    private double price;
-
     private String imgUrl;
 
     @NotBlank(message = "URL is required")
@@ -56,11 +53,10 @@ public class ProductDTO {
         this.discount = discount;
     }
 
-    public ProductDTO(Long id, String name, String description, double price, String imgUrl, String url, String brand, String quantity, double rating, int reviewsCount, double priceFrom, double priceFinal, double discount) {
+    public ProductDTO(Long id, String name, String description, String imgUrl, String url, String brand, String quantity, double rating, int reviewsCount, double priceFrom, double priceFinal, double discount) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.price = price;
         this.imgUrl = imgUrl;
         this.url = url;
         this.brand = brand;

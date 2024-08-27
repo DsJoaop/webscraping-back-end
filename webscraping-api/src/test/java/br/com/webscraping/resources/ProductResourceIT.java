@@ -5,6 +5,7 @@ import br.com.webscraping.dto.ProductDTO;
 import br.com.webscraping.repositories.ProductRepository;
 import br.com.webscraping.services.ProductService;
 import br.com.webscraping.utils.Factory;
+import br.com.webscraping.utils.TokenUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,35 +35,48 @@ public class ProductResourceIT {
     private ProductRepository repository;
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private TokenUtil tokenUtil;
+
+    private String username, password, bearerToken;
+
     private Long existingId;
     private Long nonExistingId;
     private Long countTotalProducts;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
         existingId = 1L;
         nonExistingId = 100L;
         countTotalProducts = repository.count();
+
+        username = "maria@gmail.com";
+        password = "123456";
+
+        bearerToken = tokenUtil.obtainAccessToken(mockMvc, username, password);
     }
 
     @Test
     public void deleteShouldDeleteObjectWhenIdExists() throws Exception {
         ResultActions result =
-                mockMvc.perform(delete("/products/{id}", existingId));
+                mockMvc.perform(delete("/products/{id}", existingId)
+                        .header("Authorization", "Bearer " + bearerToken));
         result.andExpect(status().isNoContent());
     }
 
     @Test
     public void deleteShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
         ResultActions result =
-                mockMvc.perform(delete("/products/{id}", nonExistingId));
+                mockMvc.perform(delete("/products/{id}", nonExistingId)
+                        .header("Authorization", "Bearer " + bearerToken));
         result.andExpect(status().isNotFound());
     }
 
     @Test
     public void deleteShouldReturnThrowResourceNotFoundExceptionWhenIdDoesNotExist() throws Exception {
         ResultActions result =
-                mockMvc.perform(delete("/products/{id}", nonExistingId));
+                mockMvc.perform(delete("/products/{id}", nonExistingId)
+                        .header("Authorization", "Bearer " + bearerToken));
         result.andExpect(status().isNotFound());
     }
 
@@ -83,6 +97,7 @@ public class ProductResourceIT {
 
         String jsonBody = objectMapper.writeValueAsString(productDTO);
         ResultActions result = mockMvc.perform(put("/products/{id}", existingId)
+                .header("Authorization", "Bearer " + bearerToken)
                 .content(jsonBody)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
@@ -98,6 +113,7 @@ public class ProductResourceIT {
         ProductDTO productDTO = Factory.createProductDTO();
         String jsonBody = objectMapper.writeValueAsString(productDTO);
         ResultActions result = mockMvc.perform(put("/products/{id}", nonExistingId)
+                .header("Authorization", "Bearer " + bearerToken)
                 .content(jsonBody)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
