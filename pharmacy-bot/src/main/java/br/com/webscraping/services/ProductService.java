@@ -78,4 +78,12 @@ public class ProductService {
         return list.map(mapper::toDto);
     }
 
+    @Transactional(readOnly = true)
+    public void saveAll(List<ProductDTO> productDTOs) {
+        // Converter ProductDTO para Product
+        List<Product> products = mapper.toEntity(productDTOs);
+
+        repository.saveAll(products);
+    }
+
 }

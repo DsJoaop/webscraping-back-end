@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface ScraperStrategy {
     List<CategoryDTO> scrapeCategories() throws Exception;
-    List<ProductDTO> scrapeProductsByCategory(CategoryDTO categoryLink) throws Exception;
+    List<ProductDTO> scrapeProductsByCategoryAndPage(CategoryDTO categoryLink, int pageNumber) throws Exception;
 }

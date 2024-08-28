@@ -88,7 +88,11 @@ public class PharmacyService {
         entity.getCategories().clear();
         for (CategoryDTO catDto : dto.getCategories()) {
             Optional<Category> category = CategoryRepository.findById(catDto.getId());
-            category.ifPresent(entity.getCategories()::add);
+            if (category.isPresent()) {
+                Category category1 = category.get();
+                category1.setPharmacy(entity);
+                entity.getCategories().add(category.get());
+            }
         }
     }
 }

@@ -19,7 +19,7 @@ public class PagueMenosScraperStrategy implements ScraperStrategy {
     }
 
     @Override
-    public List<ProductDTO> scrapeProductsByCategory(CategoryDTO categoryLink) throws Exception{
+    public List<ProductDTO> scrapeProductsByCategoryAndPage(CategoryDTO categoryLink, int pageNumber) throws Exception {
         return List.of();
     }
 }

@@ -7,6 +7,7 @@ import br.com.webscraping.scraper.factory.ScraperStrategy;
 import br.com.webscraping.scraper.factory.ScraperStrategyFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.annotation.Order;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ public class ScrapingService {
     private final CategoryService categoryService;
     private final ProductService productService;
 
+    @Async
     @Scheduled(fixedDelay = 36000000)
     @Order(1)
     public void scrapingCategory() {
@@ -38,7 +40,9 @@ public class ScrapingService {
         }
     }
 
-    //@Scheduled(fixedDelay = 18000000)
+
+    @Async
+    @Scheduled(fixedDelay = 18000000)
     @Order(2)
     public void scrapingProduct() {
         try {
@@ -47,10 +51,7 @@ public class ScrapingService {
             for (PharmacyDTO pharmacyDTO : listParmacies) {
                 ScraperStrategy strategy = scraperStrategyFactory.getStrategy(pharmacyDTO.getName());
                 for (CategoryDTO categoryDTO : listCategories) {
-                    List<ProductDTO> products = strategy.scrapeProductsByCategory(categoryDTO);
-                    for (ProductDTO productDTO : products) {
-                        productService.insert(productDTO);
-                    }
+                    scrapeAndSaveProductsInBatches(strategy, categoryDTO);
                 }
             }
             System.out.println("Produtos atualizados com sucesso!");
@@ -58,4 +59,25 @@ public class ScrapingService {
             System.err.println("Erro ao realizar scraping de produtos: " + e.getMessage());
         }
     }
+
+    private void scrapeAndSaveProductsInBatches(ScraperStrategy strategy, CategoryDTO categoryDTO) {
+        try {
+            int pageNumber = 1;
+            boolean hasMorePages;
+            do {
+                List<ProductDTO> products = strategy.scrapeProductsByCategoryAndPage(categoryDTO, pageNumber);
+                if (!products.isEmpty()) {
+                    productService.saveAll(products);
+                    products.clear();
+                    System.gc();
+                }
+                hasMorePages = !products.isEmpty(); // Se há produtos, há mais páginas
+                pageNumber++;
+            } while (hasMorePages);
+        } catch (Exception e) {
+            System.err.println("Erro ao realizar scraping da categoria: " + categoryDTO.getName() + " - " + e.getMessage());
+        }
+    }
+
+
 }

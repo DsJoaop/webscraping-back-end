@@ -27,17 +27,9 @@ public class DrogasilScraperStrategy implements ScraperStrategy {
     }
 
     @Override
-    public List<ProductDTO> scrapeProductsByCategory(CategoryDTO category) throws Exception {
-        List<ProductDTO> productsMain = new ArrayList<>();
-        if (!category.getSubcategories().isEmpty()) {
-            for (CategoryDTO subcategory : category.getSubcategories()) {
-                System.out.println("Processing subcategory: " + subcategory.getName());
-                List<ProductDTO> productsSub = productsGrid.getProducts(subcategory.getUrl(), page);
-                subcategory.setProducts(productsSub);
-                productsMain.addAll(productsSub);
-                System.out.println("Finished processing subcategory: " + subcategory.getName() + ", products found: " + productsSub.size());
-            }
-        }
-        return productsMain;
+    public List<ProductDTO> scrapeProductsByCategoryAndPage(CategoryDTO category, int pageNumber) throws Exception {
+        String urlWithPagination = category.getUrl() + "?p=" + pageNumber;
+        return productsGrid.getProducts(urlWithPagination, page);
     }
+
 }

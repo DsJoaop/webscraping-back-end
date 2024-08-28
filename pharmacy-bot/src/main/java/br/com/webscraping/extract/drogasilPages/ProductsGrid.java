@@ -52,7 +52,7 @@ public class ProductsGrid extends BasePage {
         }
     }
 
-    public List<ProductDTO> getProducts(String baseUrl, Page page) {
+    public List<ProductDTO> getAllProductsByCategory(String baseUrl, Page page) {
         List<String> allProductHtml = new ArrayList<>();
         try {
             open(baseUrl, page);
@@ -87,6 +87,28 @@ public class ProductsGrid extends BasePage {
 
         return processProducts(allProductHtml);
     }
+
+    public List<ProductDTO> getProducts(String paginatedUrl, Page page) {
+        List<ProductDTO> products = new ArrayList<>();
+        try {
+            open(paginatedUrl, page);
+            waitForPageLoad(page);
+
+            // Verifica se há produtos na página
+            Locator productItems = page.locator(ProductSelectors.PRODUCT_ITEMS.getSelector());
+            if (productItems.count() > 0) {
+                List<String> productHtmlList = collectProductHtmlFromCurrentPage(page);
+                products = processProducts(productHtmlList); // Processa e converte o HTML em DTOs
+            } else {
+                LOGGER.info("Nenhum produto encontrado na página: " + paginatedUrl);
+            }
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Erro ao processar produtos na página " + paginatedUrl + ": " + e.getMessage());
+        }
+
+        return products; // Retorna os produtos da página atual
+    }
+
 
     private List<String> collectProductHtmlFromCurrentPage(Page page) {
         List<String> productHtmlList = new ArrayList<>();
