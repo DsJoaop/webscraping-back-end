@@ -42,7 +42,9 @@ public class PlaywrightConfig {
                         "--no-sandbox",
                         "--disable-extensions",
                         "--disable-popup-blocking",
-                        "--metrics-recording-only"
+                        "--metrics-recording-only",
+                        "--ignore-certificate-errors",
+                        "--headless"
                 ));
     }
 

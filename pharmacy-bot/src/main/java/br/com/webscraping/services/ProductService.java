@@ -86,4 +86,8 @@ public class ProductService {
         repository.saveAll(products);
     }
 
+    public Long count() {
+        return repository.count();
+    }
+
 }

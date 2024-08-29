@@ -16,6 +16,7 @@ public interface CategoryMapper extends EntityMapper<CategoryDTO, Category> {
     @Override
     @Mapping(target = "products", source = "products")
     @Mapping(target = "subcategories", source = "subcategories")
+    @Mapping(target = "pharmacyName", source = "pharmacy.name")
     CategoryDTO toDto(Category entity);
 
 }

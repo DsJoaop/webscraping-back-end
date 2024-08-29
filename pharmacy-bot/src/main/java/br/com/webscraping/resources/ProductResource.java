@@ -57,5 +57,10 @@ public class ProductResource {
         return ResponseEntity.created(uri).body(dto);
     }
 
+    @GetMapping(value = "/count")
+    public ResponseEntity<Long> count() {
+        Long count = service.count();
+        return ResponseEntity.ok().body(count);
+    }
 
 }
