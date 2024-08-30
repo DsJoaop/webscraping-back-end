@@ -1,6 +1,5 @@
 package br.com.webscraping.extract.drogasilPages;
 
-
 import br.com.webscraping.dto.ProductDTO;
 import br.com.webscraping.enuns.raiaDrogasil.ProductSelectors;
 import br.com.webscraping.extract.basePage.BasePage;
@@ -17,7 +16,6 @@ import java.util.logging.Logger;
 @Component
 public class ProductsGrid extends BasePage {
     private static final Logger LOGGER = Logger.getLogger(ProductsGrid.class.getName());
-    private static final int MAX_RETRIES = 3;
 
     @Override
     protected void waitForPageLoad(Page page) {
@@ -32,12 +30,8 @@ public class ProductsGrid extends BasePage {
     public int getPagination(String baseUrl, Page page) {
         try {
             open(baseUrl, page);
+            Thread.sleep(5000);
             waitForPageLoad(page);
-
-            Locator productItems = page.locator(ProductSelectors.PRODUCT_ITEMS.getSelector());
-            if (productItems.count() == 0) {
-                page.waitForSelector(ProductSelectors.PRODUCT_ITEMS.getSelector());
-            }
 
             Locator paginationElements = page.locator(ProductSelectors.PAGINATION.getSelector());
             if (paginationElements.count() == 0) {
@@ -52,63 +46,19 @@ public class ProductsGrid extends BasePage {
         }
     }
 
-    public List<ProductDTO> getAllProductsByCategory(String baseUrl, Page page) {
-        List<String> allProductHtml = new ArrayList<>();
+    public List<ProductDTO> getProductsByCategoryAndPage(String baseUrl, Page page, int pageNumber){
+        List<String> productHtmlList = new ArrayList<>();
+        String pageUrl = baseUrl + (pageNumber > 1 ? "?p=" + pageNumber : "");
         try {
-            open(baseUrl, page);
+            open(pageUrl, page);
             waitForPageLoad(page);
-            int totalPages = getPagination(baseUrl, page);
-
-            for (int i = 1; i <= totalPages; i++) {
-                boolean success = false;
-                for (int retryCount = 0; retryCount < MAX_RETRIES && !success; retryCount++) {
-                    try {
-                        open(baseUrl + (i > 1 ? "?p=" + i : ""), page);
-                        waitForPageLoad(page);
-                        allProductHtml.addAll(collectProductHtmlFromCurrentPage(page));
-                        success = true;
-                    } catch (TimeoutError e) {
-                        LOGGER.log(Level.SEVERE, "Error processing page baseUrl: " + baseUrl + "?p=" + i, e);
-                        if (retryCount < MAX_RETRIES - 1) {
-                            LOGGER.info("Retrying to load page " + i + ", attempt " + (retryCount + 1));
-                        } else {
-                            LOGGER.severe("Failed to load page " + i + " after " + MAX_RETRIES + " attempts.");
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Error getting products: " + e.getMessage(), e);
+            productHtmlList.addAll(collectProductHtmlFromCurrentPage(page));
+        } catch (TimeoutError e) {
+            LOGGER.log(Level.SEVERE, "Error processing page: " + pageUrl, e);
         }
-
-        if (allProductHtml.isEmpty()) {
-            LOGGER.info("No products found across all pages.");
-        }
-
-        return processProducts(allProductHtml);
+        page.close();
+        return processProducts(productHtmlList);
     }
-
-    public List<ProductDTO> getProducts(String paginatedUrl, Page page) {
-        List<ProductDTO> products = new ArrayList<>();
-        try {
-            open(paginatedUrl, page);
-            waitForPageLoad(page);
-
-            // Verifica se há produtos na página
-            Locator productItems = page.locator(ProductSelectors.PRODUCT_ITEMS.getSelector());
-            if (productItems.count() > 0) {
-                List<String> productHtmlList = collectProductHtmlFromCurrentPage(page);
-                products = processProducts(productHtmlList); // Processa e converte o HTML em DTOs
-            } else {
-                LOGGER.info("Nenhum produto encontrado na página: " + paginatedUrl);
-            }
-        } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Erro ao processar produtos na página " + paginatedUrl + ": " + e.getMessage());
-        }
-
-        return products; // Retorna os produtos da página atual
-    }
-
 
     private List<String> collectProductHtmlFromCurrentPage(Page page) {
         List<String> productHtmlList = new ArrayList<>();

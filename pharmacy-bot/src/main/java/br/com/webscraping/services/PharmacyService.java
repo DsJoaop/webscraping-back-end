@@ -6,9 +6,10 @@ import br.com.webscraping.entities.Category;
 import br.com.webscraping.entities.Pharmacy;
 import br.com.webscraping.exceptions.DatabaseException;
 import br.com.webscraping.exceptions.ResourceNotFoundException;
+import br.com.webscraping.mapper.CategoryMapper;
 import br.com.webscraping.mapper.PharmacyMapper;
-import br.com.webscraping.repositories.PharmacyRepository;
 import br.com.webscraping.repositories.CategoryRepository;
+import br.com.webscraping.repositories.PharmacyRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -28,7 +29,8 @@ public class PharmacyService {
 
     private final PharmacyRepository repository;
     private final PharmacyMapper mapper;
-    private final CategoryRepository CategoryRepository;
+    private final CategoryMapper categoryMapper;
+    private final CategoryRepository categoryRepository;
 
     @Transactional(readOnly = true)
     public List<PharmacyDTO> findAll() {
@@ -84,10 +86,19 @@ public class PharmacyService {
         return list.map(mapper::toDto);
     }
 
+
+    @Transactional(readOnly = true)
+    public List<CategoryDTO> findAllCategoriesByPharmacy(Long pharmacyId) {
+        Pharmacy pharmacy = repository.findById(pharmacyId)
+                .orElseThrow(() -> new ResourceNotFoundException("Pharmacy not found"));
+        List<Category> categories = categoryRepository.findByPharmacy(pharmacy);
+        return categoryMapper.toDto(categories);
+    }
+
     private void copyDtoToEntityCategory(PharmacyDTO dto, Pharmacy entity) {
         entity.getCategories().clear();
         for (CategoryDTO catDto : dto.getCategories()) {
-            Optional<Category> category = CategoryRepository.findById(catDto.getId());
+            Optional<Category> category = categoryRepository.findById(catDto.getId());
             category.ifPresent(entity.getCategories()::add);
         }
     }
