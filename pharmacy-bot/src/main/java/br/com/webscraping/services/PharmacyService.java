@@ -26,7 +26,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class PharmacyService {
-
+    private static final String ID_NOT_FOUND = "Id not found ";
     private final PharmacyRepository repository;
     private final PharmacyMapper mapper;
     private final CategoryMapper categoryMapper;
@@ -55,7 +55,7 @@ public class PharmacyService {
     @Transactional
     public PharmacyDTO update(Long id, PharmacyDTO dto) {
         if (!repository.existsById(id)) {
-            throw new ResourceNotFoundException("Id not found " + id);
+            throw new ResourceNotFoundException(ID_NOT_FOUND + id);
         }
         try {
             Pharmacy entity = mapper.toEntity(dto);
@@ -64,14 +64,14 @@ public class PharmacyService {
             entity = repository.save(entity);
             return mapper.toDto(entity);
         } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException("Id not found " + id);
+            throw new ResourceNotFoundException(ID_NOT_FOUND + id);
         }
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)
     public void delete(Long id) {
         if (!repository.existsById(id)) {
-            throw new ResourceNotFoundException("Id not found " + id);
+            throw new ResourceNotFoundException(ID_NOT_FOUND + id);
         }
         try {
             repository.deleteById(id);
@@ -89,9 +89,7 @@ public class PharmacyService {
 
     @Transactional(readOnly = true)
     public List<CategoryDTO> findAllCategoriesByPharmacy(Long pharmacyId) {
-        Pharmacy pharmacy = repository.findById(pharmacyId)
-                .orElseThrow(() -> new ResourceNotFoundException("Pharmacy not found"));
-        List<Category> categories = categoryRepository.findByPharmacy(pharmacy);
+        List<Category> categories = categoryRepository.findCategoryByPharmacy(pharmacyId);
         return categoryMapper.toDto(categories);
     }
 

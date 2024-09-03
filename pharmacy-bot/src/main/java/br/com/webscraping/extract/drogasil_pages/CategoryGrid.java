@@ -1,19 +1,18 @@
-package br.com.webscraping.extract.drogasilPages;
+package br.com.webscraping.extract.drogasil_pages;
 
 import br.com.webscraping.dto.CategoryDTO;
 import br.com.webscraping.enuns.raiaDrogasil.CategorySelectors;
-import br.com.webscraping.extract.basePage.BasePage;
+import br.com.webscraping.extract.base_page.BasePage;
 import com.microsoft.playwright.ElementHandle;
 import com.microsoft.playwright.Page;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
-//https://www.drogasil.com.br/categorias
 @Component
 public class CategoryGrid extends BasePage {
     private static final Logger LOGGER = Logger.getLogger(CategoryGrid.class.getName());
@@ -24,7 +23,8 @@ public class CategoryGrid extends BasePage {
             page.waitForSelector(CategorySelectors.CATEGORY.getSelector());
             LOGGER.info("Page loaded successfully");
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Error waiting for page load: " + e.getMessage(), e);
+            Supplier<String> errorMessage = () -> "Error waiting for page load: " + e.getMessage();
+            LOGGER.log(Level.SEVERE, errorMessage.get(), e);
         }
     }
 
@@ -41,7 +41,8 @@ public class CategoryGrid extends BasePage {
                 categories.add(parseMainCategory(mainCategoryElements.get(i), subCategoryListElements.get(i)));
             }
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Error parsing categories: " + e.getMessage(), e);
+            Supplier<String> errorMessage = () -> "Error parsing categories: " + e.getMessage();
+            LOGGER.log(Level.SEVERE, errorMessage.get(), e);
         }
         return categories;
     }
@@ -53,7 +54,8 @@ public class CategoryGrid extends BasePage {
             List<CategoryDTO> subcategories = parseSubCategories(subCategoryListElement);
             return new CategoryDTO(mainCategoryName, mainCategoryLink, subcategories);
         } catch (Exception e) {
-            LOGGER.log(Level.WARNING, "Error parsing main category: " + e.getMessage(), e);
+            Supplier<String> errorMessage = () -> "Error parsing main category: " + e.getMessage();
+            LOGGER.log(Level.WARNING, errorMessage.get(), e);
             return null;
         }
     }
@@ -69,7 +71,8 @@ public class CategoryGrid extends BasePage {
                 subcategories.add(new CategoryDTO(subCategoryName, subCategoryLink, new ArrayList<>()));
             }
         } catch (Exception e) {
-            LOGGER.log(Level.WARNING, "Error parsing subcategories: " + e.getMessage(), e);
+            Supplier<String> errorMessage = () -> "Error parsing subcategories: " + e.getMessage();
+            LOGGER.log(Level.WARNING, errorMessage.get(), e);
         }
         return subcategories;
     }

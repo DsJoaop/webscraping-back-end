@@ -1,8 +1,8 @@
-package br.com.webscraping.extract.drogasilPages;
+package br.com.webscraping.extract.drogasil_pages;
 
 import br.com.webscraping.dto.ProductDTO;
 import br.com.webscraping.enuns.raiaDrogasil.ProductSelectors;
-import br.com.webscraping.extract.basePage.BasePage;
+import br.com.webscraping.extract.base_page.BasePage;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.TimeoutError;
@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,7 +24,8 @@ public class ProductsGrid extends BasePage {
             page.waitForSelector(ProductSelectors.GRID_PRODUCTS.getSelector());
             LOGGER.info("Page loaded successfully");
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Error waiting for page load: " + e.getMessage(), e);
+            Supplier<String> errorMessage = () -> "Error waiting for page load: " + e.getMessage();
+            LOGGER.log(Level.SEVERE, errorMessage.get(), e);
         }
     }
 
@@ -41,7 +43,8 @@ public class ProductsGrid extends BasePage {
             String lastPaginationText = paginationElements.nth(paginationElements.count() - 2).innerText();
             return Integer.parseInt(lastPaginationText);
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Exception occurred while getting pagination for: " + baseUrl, e);
+            Supplier<String> errorMessage = () -> "Exception occurred while getting pagination for: " + baseUrl + ", error: " + e.getMessage();
+            LOGGER.log(Level.SEVERE, errorMessage.get(), e);
             return 1;
         }
     }
@@ -54,7 +57,8 @@ public class ProductsGrid extends BasePage {
             waitForPageLoad(page);
             productHtmlList.addAll(collectProductHtmlFromCurrentPage(page));
         } catch (TimeoutError e) {
-            LOGGER.log(Level.SEVERE, "Error processing page: " + pageUrl, e);
+            Supplier<String> errorMessage = () -> "Error processing page: " + pageUrl + ", error: " + e.getMessage();
+            LOGGER.log(Level.SEVERE, errorMessage.get(), e);
         }
         page.close();
         return processProducts(productHtmlList);
@@ -66,7 +70,8 @@ public class ProductsGrid extends BasePage {
             Locator productItems = page.locator(ProductSelectors.PRODUCT_ITEMS.getSelector());
             productItems.all().forEach(productItem -> productHtmlList.add(productItem.innerHTML()));
         } catch (Exception e) {
-            LOGGER.log(Level.WARNING, "Error collecting product HTML from current page: " + e.getMessage(), e);
+            Supplier<String> errorMessage = () -> "Error collecting product HTML from current page: " + e.getMessage();
+            LOGGER.log(Level.WARNING, errorMessage.get(), e);
         }
         return productHtmlList;
     }
@@ -80,7 +85,8 @@ public class ProductsGrid extends BasePage {
                     products.add(product);
                 }
             } catch (Exception e) {
-                LOGGER.log(Level.WARNING, "Error processing product HTML: " + e.getMessage(), e);
+                Supplier<String> errorMessage = () -> "Error processing product HTML: " + e.getMessage();
+                LOGGER.log(Level.WARNING, errorMessage.get(), e);
             }
         }
         return products;

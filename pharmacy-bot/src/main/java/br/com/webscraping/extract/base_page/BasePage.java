@@ -1,4 +1,4 @@
-package br.com.webscraping.extract.basePage;
+package br.com.webscraping.extract.base_page;
 
 import com.microsoft.playwright.Page;
 import lombok.NoArgsConstructor;

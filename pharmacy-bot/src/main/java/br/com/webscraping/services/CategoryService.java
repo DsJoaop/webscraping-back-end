@@ -1,13 +1,16 @@
 package br.com.webscraping.services;
 
 import br.com.webscraping.dto.CategoryDTO;
+import br.com.webscraping.dto.CategoryScrapingDTO;
 import br.com.webscraping.dto.ProductDTO;
 import br.com.webscraping.entities.Category;
+import br.com.webscraping.entities.Pharmacy;
 import br.com.webscraping.entities.Product;
 import br.com.webscraping.exceptions.DatabaseException;
 import br.com.webscraping.exceptions.ResourceNotFoundException;
 import br.com.webscraping.mapper.CategoryMapper;
 import br.com.webscraping.repositories.CategoryRepository;
+import br.com.webscraping.repositories.PharmacyRepository;
 import br.com.webscraping.repositories.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +27,12 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
+    private static final String ID_NOT_FOUND = "Id not found ";
+
     private final CategoryRepository repository;
     private final CategoryMapper mapper;
     private final ProductRepository productRepository;
+    private final PharmacyRepository pharmacyRepository;
 
     @Transactional(readOnly = true)
     public List<CategoryDTO> findAll() {
@@ -41,10 +47,11 @@ public class CategoryService {
     }
 
     @Transactional
-    public CategoryDTO insert(CategoryDTO dto) {
+    public CategoryDTO insert(CategoryScrapingDTO dto) {
         Category entity = mapper.toEntity(dto);
         copyDtoToEntityProducts(dto, entity);
         copyDtoToEntitySubcategories(dto, entity);
+        copyDtoToEntityPharmacy(dto, entity);
         entity = repository.save(entity);
         return mapper.toDto(entity);
     }
@@ -52,7 +59,7 @@ public class CategoryService {
     @Transactional
     public CategoryDTO update(Long id, CategoryDTO dto) {
         if (!repository.existsById(id)) {
-            throw new ResourceNotFoundException("Id not found " + id);
+            throw new ResourceNotFoundException(ID_NOT_FOUND + id);
         }
         try {
             Category entity = mapper.toEntity(dto);
@@ -62,14 +69,14 @@ public class CategoryService {
             entity = repository.save(entity);
             return mapper.toDto(entity);
         } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException("Id not found " + id);
+            throw new ResourceNotFoundException(ID_NOT_FOUND + id);
         }
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)
     public void delete(Long id) {
         if (!repository.existsById(id)) {
-            throw new ResourceNotFoundException("Id not found " + id);
+            throw new ResourceNotFoundException(ID_NOT_FOUND + id);
         }
         try {
             repository.deleteById(id);
@@ -98,7 +105,6 @@ public class CategoryService {
         }
     }
 
-
     private void copyDtoToEntitySubcategories(CategoryDTO dto, Category entity) {
         if (dto.getSubcategories() != null) {
             entity.getSubcategories().clear();
@@ -116,4 +122,12 @@ public class CategoryService {
         }
     }
 
+    private void copyDtoToEntityPharmacy(CategoryScrapingDTO dto, Category entity) {
+        if (dto.getPharmacy() != null) {
+            Optional<Pharmacy> pharmacy = pharmacyRepository.findById(dto.getPharmacy().getId());
+            pharmacy.ifPresent(entity::setPharmacy);
+        } else {
+            throw new ResourceNotFoundException("Pharmacy not found");
+        }
+    }
 }

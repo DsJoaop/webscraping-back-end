@@ -1,4 +1,4 @@
-package br.com.webscraping.extract.drogasilPages;
+package br.com.webscraping.extract.drogasil_pages;
 
 
 import br.com.webscraping.dto.ProductDTO;
