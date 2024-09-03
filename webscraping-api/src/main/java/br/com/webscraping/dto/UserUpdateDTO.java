@@ -1,6 +1,5 @@
 package br.com.webscraping.dto;
 
-import br.com.webscraping.services.validation.UserInsertValid;
 import br.com.webscraping.services.validation.UserUpdateValid;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

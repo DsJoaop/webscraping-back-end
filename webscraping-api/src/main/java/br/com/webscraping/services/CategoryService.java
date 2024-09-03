@@ -1,13 +1,17 @@
 package br.com.webscraping.services;
 
 import br.com.webscraping.dto.CategoryDTO;
+import br.com.webscraping.dto.PharmacyDTO;
+import br.com.webscraping.dto.PharmacyResponseDTO;
 import br.com.webscraping.dto.ProductDTO;
 import br.com.webscraping.entities.Category;
+import br.com.webscraping.entities.Pharmacy;
 import br.com.webscraping.entities.Product;
 import br.com.webscraping.exceptions.DatabaseException;
 import br.com.webscraping.exceptions.ResourceNotFoundException;
 import br.com.webscraping.mapper.CategoryMapper;
 import br.com.webscraping.repositories.CategoryRepository;
+import br.com.webscraping.repositories.PharmacyRepository;
 import br.com.webscraping.repositories.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +32,7 @@ public class CategoryService {
     private final CategoryRepository repository;
     private final CategoryMapper mapper;
     private final ProductRepository productRepository;
+    private final PharmacyRepository pharmacyRepository;
 
     @Transactional(readOnly = true)
     public List<CategoryDTO> findAll() {
@@ -46,6 +51,7 @@ public class CategoryService {
         Category entity = mapper.toEntity(dto);
         copyDtoToEntityProducts(dto, entity);
         copyDtoToEntitySubcategories(dto, entity);
+        copyDtoToEntityPharmacies(dto, entity);
         entity = repository.save(entity);
         return mapper.toDto(entity);
     }
@@ -60,6 +66,7 @@ public class CategoryService {
             entity.setId(id);
             copyDtoToEntityProducts(dto, entity);
             copyDtoToEntitySubcategories(dto, entity);
+            copyDtoToEntityPharmacies(dto, entity);
             entity = repository.save(entity);
             return mapper.toDto(entity);
         } catch (EntityNotFoundException e) {
@@ -113,6 +120,20 @@ public class CategoryService {
                 }
                 subcategory.setParentCategory(entity);
                 entity.getSubcategories().add(subcategory);
+            }
+        }
+    }
+
+    private void copyDtoToEntityPharmacies(CategoryDTO dto, Category entity) {
+        if (dto.getPharmacies() != null) {
+            entity.getPharmacies().clear();
+            for (PharmacyResponseDTO pharmacyDTO : dto.getPharmacies()) {
+                Optional<Pharmacy> pharmacyOpt = pharmacyRepository.findById(pharmacyDTO.getId());
+                if (pharmacyOpt.isPresent()) {
+                    Pharmacy pharmacy = pharmacyOpt.get();
+                    pharmacy.getCategories().add(entity);
+                    entity.getPharmacies().add(pharmacy);
+                }
             }
         }
     }

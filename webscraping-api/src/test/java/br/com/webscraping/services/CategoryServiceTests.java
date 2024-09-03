@@ -80,7 +80,7 @@ public class CategoryServiceTests {
 
         // ProductMapper
         when(productMapper.toDto(ArgumentMatchers.anyList())).thenReturn(categoryDTO.getProducts());
-        when(productMapper.toEntity(ArgumentMatchers.anyList())).thenReturn(category.getProducts());
+        when(productMapper.toEntity(ArgumentMatchers.anySet())).thenReturn(category.getProducts());
     }
 
     @Test

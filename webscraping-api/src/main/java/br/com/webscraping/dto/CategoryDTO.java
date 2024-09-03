@@ -21,7 +21,7 @@ public class CategoryDTO implements Serializable {
     private Instant createdAt;
     private Instant updatedAt;
 
-    private String pharmacyName;
+    private List<PharmacyResponseDTO> pharmacies = new ArrayList<>();
     private List<ProductDTO> products = new ArrayList<>();
     private List<CategoryDTO> subcategories = new ArrayList<>();
 

@@ -1,17 +1,20 @@
 package br.com.webscraping.entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "tb_category")
 @NoArgsConstructor
 public class Category implements Serializable {
@@ -37,7 +40,7 @@ public class Category implements Serializable {
 
     @OneToMany(mappedBy = "parentCategory", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Category> subcategories = new ArrayList<>();
+    private Set<Category> subcategories = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "parent_category_id")
@@ -45,11 +48,10 @@ public class Category implements Serializable {
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY,
             cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Product> products = new ArrayList<>();
+    private Set<Product> products = new HashSet<>();
 
-    @ManyToOne
-    @JoinColumn(name = "pharmacy_id")
-    private Pharmacy pharmacy;
+    @ManyToMany(mappedBy = "categories", fetch = FetchType.LAZY)
+    private Set<Pharmacy> pharmacies = new HashSet<>();
 
     @PrePersist
     public void prePersist() {
@@ -60,5 +62,42 @@ public class Category implements Serializable {
     public void preUpdate() {
         updatedAt = Instant.now();
     }
-}
 
+    public void addPharmacy(Pharmacy pharmacy) {
+        pharmacies.add(pharmacy);
+        pharmacy.getCategories().add(this);
+
+    }
+
+    public void removePharmacy(Pharmacy pharmacy) {
+        pharmacies.remove(pharmacy);
+        pharmacy.getCategories().remove(this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Category category = (Category) o;
+        return Objects.equals(id, category.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    public void addProduct(Product product) {
+        if (!products.contains(product)) {
+            products.add(product);
+            product.setCategory(this);
+        }
+    }
+
+    public void removeProduct(Product product) {
+        if (products.contains(product)) {
+            products.remove(product);
+            product.setCategory(null);
+        }
+    }
+}

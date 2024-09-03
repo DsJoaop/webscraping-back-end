@@ -1,6 +1,7 @@
 package br.com.webscraping.repositories;
 
 import br.com.webscraping.entities.Category;
+import br.com.webscraping.entities.Pharmacy;
 import br.com.webscraping.entities.Product;
 import br.com.webscraping.utils.Factory;
 import org.junit.jupiter.api.Assertions;
@@ -10,9 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @DataJpaTest
 public class CategoryRepositoryTests {
@@ -20,6 +19,8 @@ public class CategoryRepositoryTests {
     private CategoryRepository repository;
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private PharmacyRepository pharmacyRepository;
 
     private long existingId;
     private long nonExistingId;
@@ -36,13 +37,20 @@ public class CategoryRepositoryTests {
     public void saveCategoryWithProducts() {
         Category category = Factory.createCategory();
 
-        List<Product> products = new ArrayList<>();
+        Set<Product> products = new HashSet<>();
         for (Product product : category.getProducts()) {
             Optional<Product> productOpt = productRepository.findById(product.getId());
             productOpt.ifPresent(products::add);
         }
 
+        Set<Pharmacy> pharmacies = new HashSet<>();
+        for (Pharmacy pharmacy : category.getPharmacies()) {
+            Optional<Pharmacy> pharmacyOpt = pharmacyRepository.findById(pharmacy.getId());
+            pharmacyOpt.ifPresent(pharmacies::add);
+        }
+
         category.setProducts(products);
+        category.setPharmacies(pharmacies);
         category.setId(null);
         category = repository.save(category);
 
@@ -57,6 +65,7 @@ public class CategoryRepositoryTests {
         Assertions.assertEquals("https://category.com/", savedCategory.getUrl());
         Assertions.assertEquals(countTotalCategories + 1, category.getId());
     }
+
 
     @Test
     public void findByIdShouldReturnNonEmptyOptionalWhenIdExists() {

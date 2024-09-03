@@ -1,7 +1,7 @@
 package br.com.webscraping.extract.drogasil_pages;
 
 import br.com.webscraping.dto.ProductDTO;
-import br.com.webscraping.enuns.raiaDrogasil.ProductSelectors;
+import br.com.webscraping.enuns.raia_drogasil.ProductSelectors;
 import br.com.webscraping.extract.base_page.BasePage;
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;

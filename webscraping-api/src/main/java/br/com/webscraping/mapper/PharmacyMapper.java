@@ -1,12 +1,13 @@
 package br.com.webscraping.mapper;
 
 
+import br.com.webscraping.dto.CategoryResponseDTO;
 import br.com.webscraping.dto.PharmacyDTO;
 import br.com.webscraping.entities.Pharmacy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring", uses = CategoryMapper.class)
+@Mapper(componentModel = "spring", uses = CategoryResponseDTO.class)
 public interface PharmacyMapper extends EntityMapper<PharmacyDTO, Pharmacy> {
 
     @Override

@@ -11,16 +11,33 @@ INSERT INTO tb_user_role (user_id, role_id) VALUES (2, 2);
 INSERT INTO tb_pharmacy (name, address, phone, city, state, zip_code, url, img_url, created_at) VALUES ('Farmacia Central', 'Rua Principal, 123', '123456789', 'Cidade A', 'Estado A', '12345-678', 'farmaciacentral.com.br', 'farmaciacentral.jpg', NOW());
 INSERT INTO tb_pharmacy (name, address, phone, city, state, zip_code, url, img_url, created_at) VALUES ('Farmacia Popular', 'Avenida Secundária, 456', '987654321', 'Cidade B', 'Estado B', '87654-321', 'farmaciapopular.com.br', 'farmaciapopular.jpg', NOW());
 
-INSERT INTO tb_category (name, url, created_at, pharmacy_id) VALUES ('Medicamentos', 'farmacia.com.br/medicamentos', NOW(), 1);
-INSERT INTO tb_category (name, url, created_at, pharmacy_id) VALUES ('Vitaminas e Suplementos', 'farmacia.com.br/vitaminas', NOW(), 1);
-INSERT INTO tb_category (name, url, created_at, pharmacy_id) VALUES ('Beleza e Perfumaria', 'farmacia.com.br/beleza', NOW(), 1);
-INSERT INTO tb_category (name, url, created_at, pharmacy_id) VALUES ('Higiene e Cuidados Pessoais', 'farmacia.com.br/higiene', NOW(), 1);
-INSERT INTO tb_category (name, url, created_at, pharmacy_id) VALUES ('Bebês e Crianças', 'farmacia.com.br/bebes', NOW(), 1);
-INSERT INTO tb_category (name, url, created_at, pharmacy_id) VALUES ('Primeiros Socorros', 'farmacia.com.br/primeiros-socorros', NOW(), 1);
-INSERT INTO tb_category (name, url, created_at, pharmacy_id) VALUES ('Artigos Médicos', 'farmacia.com.br/artigos-medicos', NOW(), 1);
-INSERT INTO tb_category (name, url, created_at, pharmacy_id) VALUES ('Dermocosméticos', 'farmacia.com.br/dermocosmeticos', NOW(), 1);
-INSERT INTO tb_category (name, url, created_at, pharmacy_id) VALUES ('Aparelhos de Saúde', 'farmacia.com.br/aparelhos-saude', NOW(), 1);
-INSERT INTO tb_category (name, url, created_at, pharmacy_id) VALUES ('Alimentos Saudáveis', 'farmacia.com.br/alimentos-saudaveis', NOW(), 1);
+INSERT INTO tb_category (name, url, created_at) VALUES ('Medicamentos', 'farmacia.com.br/medicamentos', NOW());
+INSERT INTO tb_category (name, url, created_at) VALUES ('Vitaminas e Suplementos', 'farmacia.com.br/vitaminas', NOW());
+INSERT INTO tb_category (name, url, created_at) VALUES ('Beleza e Perfumaria', 'farmacia.com.br/beleza', NOW());
+INSERT INTO tb_category (name, url, created_at) VALUES ('Higiene e Cuidados Pessoais', 'farmacia.com.br/higiene', NOW());
+INSERT INTO tb_category (name, url, created_at) VALUES ('Bebês e Crianças', 'farmacia.com.br/bebes', NOW());
+INSERT INTO tb_category (name, url, created_at) VALUES ('Primeiros Socorros', 'farmacia.com.br/primeiros-socorros', NOW());
+INSERT INTO tb_category (name, url, created_at) VALUES ('Artigos Médicos', 'farmacia.com.br/artigos-medicos', NOW());
+INSERT INTO tb_category (name, url, created_at) VALUES ('Dermocosméticos', 'farmacia.com.br/dermocosmeticos', NOW());
+INSERT INTO tb_category (name, url, created_at) VALUES ('Aparelhos de Saúde', 'farmacia.com.br/aparelhos-saude', NOW());
+INSERT INTO tb_category (name, url, created_at) VALUES ('Alimentos Saudáveis', 'farmacia.com.br/alimentos-saudaveis', NOW());
+
+
+-- Associações para a Farmacia Central
+INSERT INTO tb_pharmacy_category (pharmacy_id, category_id) VALUES (1, 1);
+INSERT INTO tb_pharmacy_category (pharmacy_id, category_id) VALUES (1, 2);
+INSERT INTO tb_pharmacy_category (pharmacy_id, category_id) VALUES (1, 3);
+INSERT INTO tb_pharmacy_category (pharmacy_id, category_id) VALUES (1, 4);
+INSERT INTO tb_pharmacy_category (pharmacy_id, category_id) VALUES (1, 5);
+
+-- Associações para a Farmacia Popular
+INSERT INTO tb_pharmacy_category (pharmacy_id, category_id) VALUES (2, 6);
+INSERT INTO tb_pharmacy_category (pharmacy_id, category_id) VALUES (2, 7);
+INSERT INTO tb_pharmacy_category (pharmacy_id, category_id) VALUES (2, 8);
+INSERT INTO tb_pharmacy_category (pharmacy_id, category_id) VALUES (2, 9);
+INSERT INTO tb_pharmacy_category (pharmacy_id, category_id) VALUES (2, 10);
+
+
 
 INSERT INTO tb_product (name, description, price_from, price_final, img_url, url, rating, reviews_count, discount, created_at, category_id) VALUES ('Dipirona Monoidratada 500mg', 'Comprimido para alívio de dor e febre.', 7.99, 7.99, 'dipirona.jpg', 'farmacia.com.br/dipirona', 0, 0, 0, NOW(), 1);
 INSERT INTO tb_product (name, description, price_from, price_final, img_url, url, rating, reviews_count, discount, created_at, category_id) VALUES ('Vitamina C 1000mg', 'Cápsula para fortalecimento do sistema imunológico.', 19.99, 19.99, 'vitaminaC.jpg', 'farmacia.com.br/vitaminaC', 0, 0, 0, NOW(), 2);

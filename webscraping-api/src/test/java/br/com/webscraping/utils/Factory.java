@@ -11,8 +11,6 @@ import br.com.webscraping.mapper.PharmacyConverter;
 import br.com.webscraping.mapper.ProductConverter;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Factory {
 
@@ -35,11 +33,8 @@ public class Factory {
         product.setPriceFrom(10.0);
 
 
-        // Cria uma categoria e associa ao produto
-        Category category = new Category();
-        category.setId(1L);
-        category.setName("Category Name");
-        category.setUrl("https://category.com/");
+        Category category = createCategoryAUX();
+        category.addProduct(product);
 
         return product;
     }
@@ -50,12 +45,31 @@ public class Factory {
         category.setName("Category Name");
         category.setUrl("https://category.com/");
 
-        // Cria um produto e adiciona à categoria
+
         Product product = createProductAUX(category);
-        category.getProducts().add(product);
-        product.setCategory(category);
+        Pharmacy pharmacy = createPharmacyAUX();
+        category.addProduct(product);
+        category.addPharmacy(pharmacy);
+
 
         return category;
+    }
+
+    private static Pharmacy createPharmacyAUX() {
+        Pharmacy pharmacy = new Pharmacy();
+        pharmacy.setId(pharmacyId++);
+        pharmacy.setName("Pharmacy Name");
+        pharmacy.setAddress("1234 Pharmacy St");
+        pharmacy.setPhone("(123) 456-7890");
+        pharmacy.setCity("City Name");
+        pharmacy.setState("State Name");
+        pharmacy.setZipCode("12345-678");
+        pharmacy.setUrl("https://pharmacy.com");
+        pharmacy.setImgUrl("https://pharmacy.com/logo.png");
+        pharmacy.setCreatedAt(Instant.now());
+        pharmacy.setUpdatedAt(Instant.now());
+
+        return pharmacy;
     }
 
     public static Pharmacy createPharmacy() {
@@ -72,17 +86,15 @@ public class Factory {
         pharmacy.setCreatedAt(Instant.now());
         pharmacy.setUpdatedAt(Instant.now());
 
-        // Cria uma categoria e adiciona à farmácia
+        // Cria uma categoria e associa à farmácia
         Category category = createCategory();
-        List<Category> categories = new ArrayList<>();
-        categories.add(category);
-        pharmacy.setCategories(categories);
+        pharmacy.addCategory(category);
 
         return pharmacy;
     }
 
     public static ProductDTO createProductDTO() {
-        return ProductConverter.toDto(createProduct());
+        return ProductConverter.toDTO(createProduct());
     }
 
     public static CategoryDTO createCategoryDTO() {
@@ -93,6 +105,7 @@ public class Factory {
         return PharmacyConverter.toDto(createPharmacy());
     }
 
+    // Método auxiliar para criar um produto com uma categoria associada
     private static Product createProductAUX(Category category) {
         Product product = new Product();
         product.setId(productId++);
@@ -103,12 +116,22 @@ public class Factory {
         product.setUrl("http://product.com/");
         product.setCreatedAt(Instant.now());
         product.setUpdatedAt(Instant.now());
-        product.setCategory(category);
         product.setRating(1.0);
         product.setReviewsCount(1);
         product.setPriceFrom(10.0);
 
+        // Sincronize a relação bidirecional com a categoria
+        category.addProduct(product);
 
         return product;
+    }
+
+    // Método auxiliar para criar uma categoria sem associação com produtos ou farmácias
+    private static Category createCategoryAUX() {
+        Category category = new Category();
+        category.setId(categoryId++);
+        category.setName("Category Name");
+        category.setUrl("https://category.com/");
+        return category;
     }
 }

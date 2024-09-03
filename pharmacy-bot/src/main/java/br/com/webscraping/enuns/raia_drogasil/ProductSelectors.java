@@ -1,4 +1,4 @@
-package br.com.webscraping.enuns.raiaDrogasil;
+package br.com.webscraping.enuns.raia_drogasil;
 
 import lombok.Getter;
 

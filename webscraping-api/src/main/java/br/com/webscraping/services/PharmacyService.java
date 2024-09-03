@@ -1,6 +1,7 @@
 package br.com.webscraping.services;
 
-import br.com.webscraping.dto.CategoryDTO;
+
+import br.com.webscraping.dto.CategoryResponseDTO;
 import br.com.webscraping.dto.PharmacyDTO;
 import br.com.webscraping.entities.Category;
 import br.com.webscraping.entities.Pharmacy;
@@ -86,12 +87,12 @@ public class PharmacyService {
 
     private void copyDtoToEntityCategory(PharmacyDTO dto, Pharmacy entity) {
         entity.getCategories().clear();
-        for (CategoryDTO catDto : dto.getCategories()) {
+        for (CategoryResponseDTO catDto : dto.getCategories()) {
             Optional<Category> category = CategoryRepository.findById(catDto.getId());
             if (category.isPresent()) {
                 Category category1 = category.get();
-                category1.setPharmacy(entity);
-                entity.getCategories().add(category.get());
+                category1.getPharmacies().add(entity);
+                entity.getCategories().add(category1);
             }
         }
     }
