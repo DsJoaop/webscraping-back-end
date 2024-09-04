@@ -22,6 +22,8 @@ public class CategoryServiceIT {
     private CategoryService service;
     @Autowired
     private CategoryRepository repository;
+    @Autowired
+    private Factory factory;
 
     private Long existingId;
     private Long nonExistingId;
@@ -95,7 +97,7 @@ public class CategoryServiceIT {
 
     @Test
     public void insertShouldReturnCategoryDTOCreated() {
-        CategoryDTO categoryDTO = Factory.createCategoryDTO();
+        CategoryDTO categoryDTO = factory.createCategoryDTO();
         categoryDTO = service.insert(categoryDTO);
         Assertions.assertNotNull(categoryDTO.getId());
     }

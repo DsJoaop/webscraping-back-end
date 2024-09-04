@@ -10,9 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @DataJpaTest
 public class CategoryRepositoryTests {
@@ -20,6 +18,8 @@ public class CategoryRepositoryTests {
     private CategoryRepository repository;
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private Factory factory;
 
     private long existingId;
     private long nonExistingId;
@@ -34,9 +34,9 @@ public class CategoryRepositoryTests {
 
     @Test
     public void saveCategoryWithProducts() {
-        Category category = Factory.createCategory();
+        Category category = factory.createCategory();
 
-        List<Product> products = new ArrayList<>();
+        Set<Product> products = new HashSet<>();
         for (Product product : category.getProducts()) {
             Optional<Product> productOpt = productRepository.findById(product.getId());
             productOpt.ifPresent(products::add);

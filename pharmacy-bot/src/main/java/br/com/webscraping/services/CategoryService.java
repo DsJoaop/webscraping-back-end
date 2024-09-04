@@ -1,7 +1,7 @@
 package br.com.webscraping.services;
 
 import br.com.webscraping.dto.CategoryDTO;
-import br.com.webscraping.dto.CategoryScrapingDTO;
+import br.com.webscraping.dto.PharmacyResponseDTO;
 import br.com.webscraping.dto.ProductDTO;
 import br.com.webscraping.entities.Category;
 import br.com.webscraping.entities.Pharmacy;
@@ -27,7 +27,6 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
-    private static final String ID_NOT_FOUND = "Id not found ";
 
     private final CategoryRepository repository;
     private final CategoryMapper mapper;
@@ -47,11 +46,11 @@ public class CategoryService {
     }
 
     @Transactional
-    public CategoryDTO insert(CategoryScrapingDTO dto) {
+    public CategoryDTO insert(CategoryDTO dto) {
         Category entity = mapper.toEntity(dto);
         copyDtoToEntityProducts(dto, entity);
         copyDtoToEntitySubcategories(dto, entity);
-        copyDtoToEntityPharmacy(dto, entity);
+        copyDtoToEntityPharmacies(dto, entity);
         entity = repository.save(entity);
         return mapper.toDto(entity);
     }
@@ -59,24 +58,25 @@ public class CategoryService {
     @Transactional
     public CategoryDTO update(Long id, CategoryDTO dto) {
         if (!repository.existsById(id)) {
-            throw new ResourceNotFoundException(ID_NOT_FOUND + id);
+            throw new ResourceNotFoundException("Id not found " + id);
         }
         try {
             Category entity = mapper.toEntity(dto);
             entity.setId(id);
             copyDtoToEntityProducts(dto, entity);
             copyDtoToEntitySubcategories(dto, entity);
+            copyDtoToEntityPharmacies(dto, entity);
             entity = repository.save(entity);
             return mapper.toDto(entity);
         } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(ID_NOT_FOUND + id);
+            throw new ResourceNotFoundException("Id not found " + id);
         }
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)
     public void delete(Long id) {
         if (!repository.existsById(id)) {
-            throw new ResourceNotFoundException(ID_NOT_FOUND + id);
+            throw new ResourceNotFoundException("Id not found " + id);
         }
         try {
             repository.deleteById(id);
@@ -105,6 +105,7 @@ public class CategoryService {
         }
     }
 
+
     private void copyDtoToEntitySubcategories(CategoryDTO dto, Category entity) {
         if (dto.getSubcategories() != null) {
             entity.getSubcategories().clear();
@@ -122,12 +123,17 @@ public class CategoryService {
         }
     }
 
-    private void copyDtoToEntityPharmacy(CategoryScrapingDTO dto, Category entity) {
-        if (dto.getPharmacy() != null) {
-            Optional<Pharmacy> pharmacy = pharmacyRepository.findById(dto.getPharmacy().getId());
-            pharmacy.ifPresent(entity::setPharmacy);
-        } else {
-            throw new ResourceNotFoundException("Pharmacy not found");
+    private void copyDtoToEntityPharmacies(CategoryDTO dto, Category entity) {
+        if (dto.getPharmacies() != null) {
+            entity.getPharmacies().clear();
+            for (PharmacyResponseDTO pharmacyDTO : dto.getPharmacies()) {
+                Optional<Pharmacy> pharmacyOpt = pharmacyRepository.findById(pharmacyDTO.getId());
+                if (pharmacyOpt.isPresent()) {
+                    Pharmacy pharmacy = pharmacyOpt.get();
+                    pharmacy.getCategories().add(entity);
+                    entity.getPharmacies().add(pharmacy);
+                }
+            }
         }
     }
 }

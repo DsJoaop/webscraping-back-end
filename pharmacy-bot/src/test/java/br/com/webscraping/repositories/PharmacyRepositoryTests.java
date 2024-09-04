@@ -9,9 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @DataJpaTest
 public class PharmacyRepositoryTests {
@@ -21,6 +19,8 @@ public class PharmacyRepositoryTests {
 
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private Factory factory;
 
     private long existingId;
     private long nonExistingId;
@@ -35,9 +35,9 @@ public class PharmacyRepositoryTests {
 
     @Test
     public void savePharmacyWithCategories() {
-        Pharmacy pharmacy = Factory.createPharmacy();
+        Pharmacy pharmacy = factory.createPharmacy();
 
-        List<Category> categories = new ArrayList<>();
+        Set<Category> categories = new HashSet<>();
         for (Category category : pharmacy.getCategories()) {
             Optional<Category> categoryOpt = categoryRepository.findById(category.getId());
             categoryOpt.ifPresent(categories::add);

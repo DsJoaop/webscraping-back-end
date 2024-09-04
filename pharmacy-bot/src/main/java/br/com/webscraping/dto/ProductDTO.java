@@ -3,23 +3,12 @@ package br.com.webscraping.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serial;
-import java.io.Serializable;
-
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class ProductDTO implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 1L;
-
-
+public class ProductDTO {
     private Long id;
 
     @Size(min = 3, max = 100, message = "Name must be between 3 and 100 characters")
@@ -50,5 +39,17 @@ public class ProductDTO implements Serializable {
     private double priceFinal;
 
     private double discount;
+
+    public ProductDTO(String name, String url, String brand, String quantity, double rating, int reviewsCount, double priceFrom, double priceFinal, double discount) {
+        this.name = name;
+        this.url = url;
+        this.brand = brand;
+        this.quantity = quantity;
+        this.rating = rating;
+        this.reviewsCount = reviewsCount;
+        this.priceFrom = priceFrom;
+        this.priceFinal = priceFinal;
+        this.discount = discount;
+    }
 
 }

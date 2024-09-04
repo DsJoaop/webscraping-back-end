@@ -39,6 +39,8 @@ public class PharmacyResourceTests {
 
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private Factory factory;
 
     private PharmacyDTO pharmacyDTO;
     private PageImpl<PharmacyDTO> page;
@@ -51,7 +53,7 @@ public class PharmacyResourceTests {
         existingId = 1L;
         nonExistingId = 100L;
         dependentId = 4L;
-        pharmacyDTO = Factory.createPharmacyDTO();
+        pharmacyDTO = factory.createPharmacyDTO();
         page = new PageImpl<>(List.of(pharmacyDTO));
 
         when(service.findAllPaged(ArgumentMatchers.any())).thenReturn(page);

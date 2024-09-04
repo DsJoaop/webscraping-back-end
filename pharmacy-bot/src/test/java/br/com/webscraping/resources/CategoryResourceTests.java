@@ -51,7 +51,8 @@ public class CategoryResourceTests {
         existingId = 1L;
         nonExistingId = 100L;
         dependentId = 4L;
-        categoryDTO = Factory.createCategoryDTO();
+        Factory factory = new Factory();
+        categoryDTO = factory.createCategoryDTO();
         page = new PageImpl<>(List.of(categoryDTO));
 
         when(service.findAllPaged(ArgumentMatchers.any())).thenReturn(page);

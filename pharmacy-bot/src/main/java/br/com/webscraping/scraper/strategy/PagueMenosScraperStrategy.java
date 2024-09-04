@@ -1,6 +1,5 @@
 package br.com.webscraping.scraper.strategy;
 import br.com.webscraping.dto.CategoryDTO;
-import br.com.webscraping.dto.CategoryScrapingDTO;
 import br.com.webscraping.dto.PharmacyDTO;
 import br.com.webscraping.dto.ProductDTO;
 import br.com.webscraping.scraper.factory.ScraperStrategy;
@@ -16,7 +15,7 @@ public class PagueMenosScraperStrategy implements ScraperStrategy {
     private final Page page;
 
     @Override
-    public List<CategoryScrapingDTO> scrapeCategories() {
+    public List<CategoryDTO> scrapeCategories() {
         return List.of();
     }
 

@@ -36,6 +36,8 @@ public class PharmacyResourceIT {
 
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private Factory factory;
 
     private Long existingId;
     private Long nonExistingId;
@@ -73,7 +75,7 @@ public class PharmacyResourceIT {
 
     @Test
     public void updateShouldReturnPharmacyDTOWhenIdExists() throws Exception {
-        PharmacyDTO pharmacyDTO = Factory.createPharmacyDTO();
+        PharmacyDTO pharmacyDTO = factory.createPharmacyDTO();
         String expectedName = pharmacyDTO.getName();
         String expectedAddress = pharmacyDTO.getAddress();
 
@@ -91,7 +93,7 @@ public class PharmacyResourceIT {
 
     @Test
     public void updateShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
-        PharmacyDTO pharmacyDTO = Factory.createPharmacyDTO();
+        PharmacyDTO pharmacyDTO = factory.createPharmacyDTO();
         String jsonBody = objectMapper.writeValueAsString(pharmacyDTO);
         ResultActions result = mockMvc.perform(put("/pharmacies/{id}", nonExistingId)
                 .content(jsonBody)
@@ -113,7 +115,7 @@ public class PharmacyResourceIT {
 
     @Test
     public void insertShouldReturnPharmacyDTOCreated() throws Exception {
-        PharmacyDTO pharmacyDTO = Factory.createPharmacyDTO();
+        PharmacyDTO pharmacyDTO = factory.createPharmacyDTO();
         String jsonBody = objectMapper.writeValueAsString(pharmacyDTO);
         ResultActions result = mockMvc.perform(post("/pharmacies")
                 .content(jsonBody)

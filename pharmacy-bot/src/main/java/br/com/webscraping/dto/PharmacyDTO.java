@@ -23,5 +23,5 @@ public class PharmacyDTO implements Serializable {
     private String zipCode;
     private String url;
     private String imgUrl;
-    private List<CategoryDTO> categories = new ArrayList<>();
+    private List<CategoryResponseDTO> categories = new ArrayList<>();
 }

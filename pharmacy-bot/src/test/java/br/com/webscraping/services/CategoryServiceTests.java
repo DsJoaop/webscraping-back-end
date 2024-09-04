@@ -56,8 +56,9 @@ public class CategoryServiceTests {
         existingId = 1L;
         nonExistingId = 100L;
         dependentId = 4L;
-        category = Factory.createCategory();
-        categoryDTO = Factory.createCategoryDTO();
+        Factory factory = new Factory();
+        category = factory.createCategory();
+        categoryDTO = factory.createCategoryDTO();
         page = new PageImpl<>(List.of(category));
 
         // CategoryRepository
@@ -80,7 +81,7 @@ public class CategoryServiceTests {
 
         // ProductMapper
         when(productMapper.toDto(ArgumentMatchers.anyList())).thenReturn(categoryDTO.getProducts());
-        when(productMapper.toEntity(ArgumentMatchers.anyList())).thenReturn(category.getProducts());
+        when(productMapper.toEntity(ArgumentMatchers.anySet())).thenReturn(category.getProducts());
     }
 
     @Test

@@ -18,17 +18,19 @@ public class ProductRepositoryTests {
     private long existingId;
     private long nonExistingId;
     private long countTotalProducts;
+    private Factory factory;
 
     @BeforeEach
     void setup() {
         existingId = 1L;
         nonExistingId = 1000L;
         countTotalProducts = repository.count();
+        factory = new Factory();
     }
 
     @Test
     public void saveShouldPersistWithAutoincrementWhenIdIsNull() {
-        Product product = Factory.createProduct();
+        Product product = factory.createProduct();
         product.setId(null);
         product = repository.save(product);
         Assertions.assertNotNull(product.getId());

@@ -1,6 +1,7 @@
 package br.com.webscraping.services;
 
-import br.com.webscraping.dto.CategoryScrapingDTO;
+import br.com.webscraping.dto.CategoryDTO;
+
 import br.com.webscraping.dto.PharmacyDTO;
 import br.com.webscraping.scraper.factory.ScraperStrategy;
 import br.com.webscraping.scraper.factory.ScraperStrategyFactory;
@@ -22,7 +23,7 @@ public class CategoryScrapingService {
     public void scrapeAndSaveCategories(PharmacyDTO pharmacy) {
         ScraperStrategy strategy = scraperStrategyFactory.getStrategy(pharmacy.getName());
         try {
-            List<CategoryScrapingDTO> categories = strategy.scrapeCategories();
+            List<CategoryDTO> categories = strategy.scrapeCategories();
             categories.forEach(categoryService::insert);
         } catch (Exception e) {
             logger.error("Erro ao realizar scraping das categorias da farmácia {}: {}", pharmacy.getName(), e.getMessage());

@@ -22,7 +22,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ProductService {
-    private static final String ENTITY_NOT_FOUND = "Entity not found";
+
     private final ProductRepository repository;
     private final ProductMapper mapper;
 
@@ -34,7 +34,7 @@ public class ProductService {
     @Transactional(readOnly = true)
     public ProductDTO findById(Long id) {
         Optional<Product> obj = repository.findById(id);
-        Product entity = obj.orElseThrow(() -> new ResourceNotFoundException(ENTITY_NOT_FOUND));
+        Product entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
         return mapper.toDto(entity);
     }
 
@@ -48,7 +48,7 @@ public class ProductService {
     @Transactional
     public ProductDTO update(Long id, ProductDTO dto) {
         if (!repository.existsById(id)) {
-            throw new ResourceNotFoundException(ENTITY_NOT_FOUND);
+            throw new ResourceNotFoundException("Entity not found");
         }
         try {
             Product entity = mapper.toEntity(dto);
@@ -56,14 +56,14 @@ public class ProductService {
             entity = repository.save(entity);
             return mapper.toDto(entity);
         } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException(ENTITY_NOT_FOUND);
+            throw new ResourceNotFoundException("Entity not found");
         }
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)
     public void delete(Long id) {
         if (!repository.existsById(id)) {
-            throw new ResourceNotFoundException(ENTITY_NOT_FOUND);
+            throw new ResourceNotFoundException("Entity not found");
         }
         try {
             repository.deleteById(id);
@@ -79,12 +79,6 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public void saveAll(List<ProductDTO> productDTOs) {
-        List<Product> products = mapper.toEntity(productDTOs);
-
-        repository.saveAll(products);
-    }
-
     public Long count() {
         return repository.count();
     }

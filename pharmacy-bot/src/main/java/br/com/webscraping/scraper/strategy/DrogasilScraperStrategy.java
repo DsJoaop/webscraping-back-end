@@ -1,7 +1,7 @@
 package br.com.webscraping.scraper.strategy;
 
 import br.com.webscraping.dto.CategoryDTO;
-import br.com.webscraping.dto.CategoryScrapingDTO;
+
 import br.com.webscraping.dto.PharmacyDTO;
 import br.com.webscraping.dto.ProductDTO;
 import br.com.webscraping.extract.drogasil_pages.ProductsGrid;
@@ -21,7 +21,7 @@ public class DrogasilScraperStrategy implements ScraperStrategy {
     private final ProductsGrid productsGrid;
 
     @Override
-    public List<CategoryScrapingDTO> scrapeCategories() throws Exception {
+    public List<CategoryDTO> scrapeCategories() throws Exception {
         return categoryGrid.parseCategories(page);
     }
 

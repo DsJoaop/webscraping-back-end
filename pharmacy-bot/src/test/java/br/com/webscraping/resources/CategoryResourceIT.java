@@ -34,6 +34,8 @@ public class CategoryResourceIT {
 
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private Factory factory;
 
     private Long existingId;
     private Long nonExistingId;
@@ -80,7 +82,7 @@ public class CategoryResourceIT {
     @Test
     public void insertShouldReturnCategoryDTOCreated() throws Exception {
         ResultActions result = mockMvc.perform(post("/categories")
-                .content(objectMapper.writeValueAsString(Factory.createCategoryDTO()))
+                .content(objectMapper.writeValueAsString(factory.createCategoryDTO()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
         result.andExpect(status().isCreated());
@@ -89,7 +91,7 @@ public class CategoryResourceIT {
     @Test
     public void updateShouldReturnCategoryDTOWhenIdExists() throws Exception {
         ResultActions result = mockMvc.perform(put("/categories/{id}", existingId)
-                .content(objectMapper.writeValueAsString(Factory.createCategoryDTO()))
+                .content(objectMapper.writeValueAsString(factory.createCategoryDTO()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
         result.andExpect(status().isOk());
@@ -98,7 +100,7 @@ public class CategoryResourceIT {
     @Test
     public void updateShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
         ResultActions result = mockMvc.perform(put("/categories/{id}", nonExistingId)
-                .content(objectMapper.writeValueAsString(Factory.createCategoryDTO()))
+                .content(objectMapper.writeValueAsString(factory.createCategoryDTO()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
         result.andExpect(status().isNotFound());

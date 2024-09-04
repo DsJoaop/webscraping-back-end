@@ -34,6 +34,8 @@ public class ProductResourceIT {
     private ProductRepository repository;
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private Factory factory;
     private Long existingId;
     private Long nonExistingId;
     private Long countTotalProducts;
@@ -77,7 +79,7 @@ public class ProductResourceIT {
 
     @Test
     public void updateShouldReturnProductDTOWhenIdExists() throws Exception {
-        ProductDTO productDTO = Factory.createProductDTO();
+        ProductDTO productDTO = factory.createProductDTO();
         String expectedName = productDTO.getName();
         String expectedDescription = productDTO.getDescription();
 
@@ -95,7 +97,7 @@ public class ProductResourceIT {
 
     @Test
     public void updateShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
-        ProductDTO productDTO = Factory.createProductDTO();
+        ProductDTO productDTO = factory.createProductDTO();
         String jsonBody = objectMapper.writeValueAsString(productDTO);
         ResultActions result = mockMvc.perform(put("/products/{id}", nonExistingId)
                 .content(jsonBody)

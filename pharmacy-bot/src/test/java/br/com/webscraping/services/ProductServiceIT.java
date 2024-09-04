@@ -21,6 +21,8 @@ public class ProductServiceIT {
     private ProductService service;
     @Autowired
     private ProductRepository repository;
+    @Autowired
+    private Factory factory;
     private Long existingId;
     private Long nonExistingId;
     private Long countTotalProducts;
@@ -97,7 +99,7 @@ public class ProductServiceIT {
 
     @Test
     public void insertShouldReturnProductDTOCreated() {
-        ProductDTO productDTO = Factory.createProductDTO();
+        ProductDTO productDTO = factory.createProductDTO();
         productDTO = service.insert(productDTO);
         Assertions.assertNotNull(productDTO.getId());
     }

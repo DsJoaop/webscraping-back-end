@@ -51,8 +51,9 @@ public class ProductServiceTests {
         existingId = 1L;
         nonExistingId = 100L;
         dependentId = 4L;
-        product = Factory.createProduct();
-        productDTO = Factory.createProductDTO();
+        Factory factory = new Factory();
+        product = factory.createProduct();
+        productDTO = factory.createProductDTO();
         page = new PageImpl<>(List.of(product));
 
 
