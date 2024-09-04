@@ -25,6 +25,7 @@ public class CategoryRepositoryTests {
     private long existingId;
     private long nonExistingId;
     private long countTotalCategories;
+    private final Factory factory = new Factory();
 
     @BeforeEach
     void setup() {
@@ -35,7 +36,7 @@ public class CategoryRepositoryTests {
 
     @Test
     public void saveCategoryWithProducts() {
-        Category category = Factory.createCategory();
+        Category category = factory.createCategory();
 
         Set<Product> products = new HashSet<>();
         for (Product product : category.getProducts()) {

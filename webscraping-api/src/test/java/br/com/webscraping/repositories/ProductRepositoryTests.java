@@ -16,6 +16,7 @@ import java.util.Optional;
 public class ProductRepositoryTests {
     @Autowired
     private ProductRepository repository;
+    private final Factory factory = new Factory();
     private long existingId;
     private long nonExistingId;
     private long countTotalProducts;
@@ -29,7 +30,7 @@ public class ProductRepositoryTests {
 
     @Test
     public void saveShouldPersistWithAutoincrementWhenIdIsNull() {
-        Product product = Factory.createProduct();
+        Product product = factory.createProduct();
         product.setId(null);
         product = repository.save(product);
         Assertions.assertNotNull(product.getId());

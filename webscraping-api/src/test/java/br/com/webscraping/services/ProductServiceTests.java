@@ -42,18 +42,17 @@ public class ProductServiceTests {
     private long existingId;
     private long nonExistingId;
     private long dependentId;
-    private PageImpl<Product> page;
     private Product product;
-    private ProductDTO productDTO;
 
     @BeforeEach
     void setUp() {
         existingId = 1L;
         nonExistingId = 100L;
         dependentId = 4L;
-        product = Factory.createProduct();
-        productDTO = Factory.createProductDTO();
-        page = new PageImpl<>(List.of(product));
+        Factory factory = new Factory();
+        product = factory.createProduct();
+        ProductDTO productDTO = factory.createProductDTO();
+        PageImpl<Product> page = new PageImpl<>(List.of(product));
 
 
         // ProductRepository

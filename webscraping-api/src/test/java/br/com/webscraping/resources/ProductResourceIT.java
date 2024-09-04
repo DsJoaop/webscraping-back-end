@@ -37,6 +37,8 @@ public class ProductResourceIT {
     private ObjectMapper objectMapper;
     @Autowired
     private TokenUtil tokenUtil;
+    @Autowired
+    private Factory factory;
 
     private String username, password, bearerToken;
 
@@ -91,7 +93,7 @@ public class ProductResourceIT {
 
     @Test
     public void updateShouldReturnProductDTOWhenIdExists() throws Exception {
-        ProductDTO productDTO = Factory.createProductDTO();
+        ProductDTO productDTO = factory.createProductDTO();
         String expectedName = productDTO.getName();
         String expectedDescription = productDTO.getDescription();
 
@@ -110,7 +112,7 @@ public class ProductResourceIT {
 
     @Test
     public void updateShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
-        ProductDTO productDTO = Factory.createProductDTO();
+        ProductDTO productDTO = factory.createProductDTO();
         String jsonBody = objectMapper.writeValueAsString(productDTO);
         ResultActions result = mockMvc.perform(put("/products/{id}", nonExistingId)
                 .header("Authorization", "Bearer " + bearerToken)

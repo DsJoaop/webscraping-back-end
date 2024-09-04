@@ -41,6 +41,9 @@ public class PharmacyResourceIT {
     private ObjectMapper objectMapper;
 
     @Autowired
+    private Factory factory;
+
+    @Autowired
     private TokenUtil tokenUtil;
 
     private String username, password, bearerToken;
@@ -89,7 +92,7 @@ public class PharmacyResourceIT {
 
     @Test
     public void updateShouldReturnPharmacyDTOWhenIdExists() throws Exception {
-        PharmacyDTO pharmacyDTO = Factory.createPharmacyDTO();
+        PharmacyDTO pharmacyDTO = factory.createPharmacyDTO();
         String expectedName = pharmacyDTO.getName();
         String expectedAddress = pharmacyDTO.getAddress();
 
@@ -108,7 +111,7 @@ public class PharmacyResourceIT {
 
     @Test
     public void updateShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
-        PharmacyDTO pharmacyDTO = Factory.createPharmacyDTO();
+        PharmacyDTO pharmacyDTO = factory.createPharmacyDTO();
         String jsonBody = objectMapper.writeValueAsString(pharmacyDTO);
         ResultActions result = mockMvc.perform(put("/pharmacies/{id}", nonExistingId)
                 .header("Authorization", "Bearer " + bearerToken)
@@ -132,7 +135,7 @@ public class PharmacyResourceIT {
 
     @Test
     public void insertShouldReturnPharmacyDTOCreated() throws Exception {
-        PharmacyDTO pharmacyDTO = Factory.createPharmacyDTO();
+        PharmacyDTO pharmacyDTO = factory.createPharmacyDTO();
         String jsonBody = objectMapper.writeValueAsString(pharmacyDTO);
         ResultActions result = mockMvc.perform(post("/pharmacies")
                 .header("Authorization", "Bearer " + bearerToken)

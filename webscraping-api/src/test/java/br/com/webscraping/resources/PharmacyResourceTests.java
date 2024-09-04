@@ -49,7 +49,8 @@ public class PharmacyResourceTests {
         existingId = 1L;
         nonExistingId = 100L;
         dependentId = 4L;
-        pharmacyDTO = Factory.createPharmacyDTO();
+        Factory factory = new Factory();
+        pharmacyDTO = factory.createPharmacyDTO();
         page = new PageImpl<>(List.of(pharmacyDTO));
 
         when(service.findAllPaged(ArgumentMatchers.any())).thenReturn(page);

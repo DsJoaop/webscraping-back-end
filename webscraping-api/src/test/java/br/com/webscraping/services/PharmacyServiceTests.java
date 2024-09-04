@@ -51,8 +51,9 @@ public class PharmacyServiceTests {
         existingId = 1L;
         nonExistingId = 100L;
         dependentId = 4L;
-        pharmacy = Factory.createPharmacy();
-        pharmacyDTO = Factory.createPharmacyDTO();
+        Factory factory = new Factory();
+        pharmacy = factory.createPharmacy();
+        pharmacyDTO = factory.createPharmacyDTO();
         page = new PageImpl<>(List.of(pharmacy));
 
         // PharmacyRepository

@@ -20,6 +20,9 @@ public class PharmacyRepositoryTests {
     @Autowired
     private CategoryRepository categoryRepository;
 
+
+    private final Factory factory = new Factory();
+
     private long existingId;
     private long nonExistingId;
     private long countTotalPharmacies;
@@ -33,7 +36,7 @@ public class PharmacyRepositoryTests {
 
     @Test
     public void savePharmacyWithCategories() {
-        Pharmacy pharmacy = Factory.createPharmacy();
+        Pharmacy pharmacy = factory.createPharmacy();
 
         List<Category> categories = new ArrayList<>();
         for (Category category : pharmacy.getCategories()) {

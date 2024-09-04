@@ -60,8 +60,9 @@ public class CategoryServiceTests {
         existingId = 1L;
         nonExistingId = 100L;
         dependentId = 4L;
-        category = Factory.createCategory();
-        categoryDTO = Factory.createCategoryDTO();
+        Factory factory = new Factory();
+        category = factory.createCategory();
+        categoryDTO = factory.createCategoryDTO();
         page = new PageImpl<>(List.of(category));
 
         // CategoryRepository

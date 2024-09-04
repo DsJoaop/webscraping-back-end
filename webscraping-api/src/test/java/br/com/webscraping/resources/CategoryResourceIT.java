@@ -39,7 +39,11 @@ public class CategoryResourceIT {
     @Autowired
     private TokenUtil tokenUtil;
 
-    private String username, password, bearerToken;
+    @Autowired
+    private Factory factory;
+
+    private String password;
+    private String bearerToken;
 
     private Long existingId;
     private Long nonExistingId;
@@ -48,7 +52,7 @@ public class CategoryResourceIT {
     void setUp() throws Exception {
         existingId = 1L;
         nonExistingId = 100L;
-        username = "maria@gmail.com";
+        String username = "maria@gmail.com";
         password = "123456";
 
         bearerToken = tokenUtil.obtainAccessToken(mockMvc, username, password);
@@ -94,7 +98,7 @@ public class CategoryResourceIT {
     public void insertShouldReturnCategoryDTOCreated() throws Exception {
         ResultActions result = mockMvc.perform(post("/categories")
                 .header("Authorization", "Bearer " + bearerToken)
-                .content(objectMapper.writeValueAsString(Factory.createCategoryDTO()))
+                .content(objectMapper.writeValueAsString(factory.createCategoryDTO()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
         result.andExpect(status().isCreated());
@@ -104,7 +108,7 @@ public class CategoryResourceIT {
     public void updateShouldReturnCategoryDTOWhenIdExists() throws Exception {
         ResultActions result = mockMvc.perform(put("/categories/{id}", existingId)
                 .header("Authorization", "Bearer " + bearerToken)
-                .content(objectMapper.writeValueAsString(Factory.createCategoryDTO()))
+                .content(objectMapper.writeValueAsString(factory.createCategoryDTO()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
         result.andExpect(status().isOk());
@@ -114,7 +118,7 @@ public class CategoryResourceIT {
     public void updateShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
         ResultActions result = mockMvc.perform(put("/categories/{id}", nonExistingId)
                 .header("Authorization", "Bearer " + bearerToken)
-                .content(objectMapper.writeValueAsString(Factory.createCategoryDTO()))
+                .content(objectMapper.writeValueAsString(factory.createCategoryDTO()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON));
         result.andExpect(status().isNotFound());

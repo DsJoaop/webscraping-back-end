@@ -21,6 +21,8 @@ public class PharmacyServiceIT {
     private PharmacyService service;
     @Autowired
     private PharmacyRepository repository;
+    @Autowired
+    private Factory factory;
     private Long existingId;
     private Long nonExistingId;
     private Long countTotalPharmacies;
@@ -92,7 +94,7 @@ public class PharmacyServiceIT {
 
     @Test
     public void insertShouldReturnPharmacyDTOCreated() {
-        PharmacyDTO pharmacyDTO = Factory.createPharmacyDTO();
+        PharmacyDTO pharmacyDTO = factory.createPharmacyDTO();
         pharmacyDTO = service.insert(pharmacyDTO);
         Assertions.assertNotNull(pharmacyDTO.getId());
     }
