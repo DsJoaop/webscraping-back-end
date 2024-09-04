@@ -7,6 +7,7 @@ import br.com.webscraping.exceptions.ResourceNotFoundException;
 import br.com.webscraping.mapper.CategoryMapper;
 import br.com.webscraping.mapper.ProductMapper;
 import br.com.webscraping.repositories.CategoryRepository;
+import br.com.webscraping.repositories.PharmacyRepository;
 import br.com.webscraping.repositories.ProductRepository;
 import br.com.webscraping.utils.Factory;
 import org.junit.jupiter.api.Assertions;
@@ -43,6 +44,9 @@ public class CategoryServiceTests {
 
     @Mock
     private ProductRepository productRepository;
+
+    @Mock
+    private PharmacyRepository pharmacyRepository;
 
     private long existingId;
     private long nonExistingId;

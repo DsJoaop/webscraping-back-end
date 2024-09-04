@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @DataJpaTest
+@Transactional
 public class ProductRepositoryTests {
     @Autowired
     private ProductRepository repository;

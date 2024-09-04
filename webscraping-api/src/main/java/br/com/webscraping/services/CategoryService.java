@@ -1,7 +1,6 @@
 package br.com.webscraping.services;
 
 import br.com.webscraping.dto.CategoryDTO;
-import br.com.webscraping.dto.PharmacyDTO;
 import br.com.webscraping.dto.PharmacyResponseDTO;
 import br.com.webscraping.dto.ProductDTO;
 import br.com.webscraping.entities.Category;

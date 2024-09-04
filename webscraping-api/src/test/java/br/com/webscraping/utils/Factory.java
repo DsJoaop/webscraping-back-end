@@ -126,10 +126,9 @@ public class Factory {
         return product;
     }
 
-    // Método auxiliar para criar uma categoria sem associação com produtos ou farmácias
     private static Category createCategoryAUX() {
         Category category = new Category();
-        category.setId(categoryId++);
+        category.setId(1L);
         category.setName("Category Name");
         category.setUrl("https://category.com/");
         return category;

@@ -23,8 +23,6 @@ INSERT INTO tb_category (name, url, created_at) VALUES ('Aparelhos de Saúde', '
 INSERT INTO tb_category (name, url, created_at) VALUES ('Alimentos Saudáveis', 'farmacia.com.br/alimentos-saudaveis', NOW());
 
 
--- Associações para a Farmacia Central
-INSERT INTO tb_pharmacy_category (pharmacy_id, category_id) VALUES (1, 1);
 INSERT INTO tb_pharmacy_category (pharmacy_id, category_id) VALUES (1, 2);
 INSERT INTO tb_pharmacy_category (pharmacy_id, category_id) VALUES (1, 3);
 INSERT INTO tb_pharmacy_category (pharmacy_id, category_id) VALUES (1, 4);
