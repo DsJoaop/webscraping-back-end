@@ -3,6 +3,7 @@ package br.com.webscraping.services;
 import br.com.webscraping.dto.CategoryDTO;
 
 import br.com.webscraping.dto.PharmacyDTO;
+import br.com.webscraping.dto.PharmacyResponseDTO;
 import br.com.webscraping.scraper.factory.ScraperStrategy;
 import br.com.webscraping.scraper.factory.ScraperStrategyFactory;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class CategoryScrapingService {
     private final ScraperStrategyFactory scraperStrategyFactory;
     private final CategoryService categoryService;
 
-    public void scrapeAndSaveCategories(PharmacyDTO pharmacy) {
+    public void scrapeAndSaveCategories(PharmacyResponseDTO pharmacy) {
         ScraperStrategy strategy = scraperStrategyFactory.getStrategy(pharmacy.getName());
         try {
             List<CategoryDTO> categories = strategy.scrapeCategories(pharmacy.getId());

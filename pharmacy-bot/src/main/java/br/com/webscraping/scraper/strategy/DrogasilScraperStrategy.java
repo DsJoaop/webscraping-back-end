@@ -3,6 +3,7 @@ package br.com.webscraping.scraper.strategy;
 import br.com.webscraping.dto.CategoryDTO;
 
 import br.com.webscraping.dto.PharmacyDTO;
+import br.com.webscraping.dto.PharmacyResponseDTO;
 import br.com.webscraping.dto.ProductDTO;
 import br.com.webscraping.extract.drogasil_pages.ProductsGrid;
 import br.com.webscraping.scraper.factory.ScraperStrategy;
@@ -26,7 +27,7 @@ public class DrogasilScraperStrategy implements ScraperStrategy {
     }
 
     @Override
-    public List<ProductDTO> scrapeProductsByCategoryAndPage(PharmacyDTO pharmacy, CategoryDTO category, int totalPages) {
+    public List<ProductDTO> scrapeProductsByCategoryAndPage(PharmacyResponseDTO pharmacy, CategoryDTO category, int totalPages) {
         return productsGrid.getProductsByCategoryAndPage(category.getUrl(), this.page, totalPages);
     }
 

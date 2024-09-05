@@ -2,6 +2,7 @@ package br.com.webscraping.services;
 
 import br.com.webscraping.dto.CategoryDTO;
 import br.com.webscraping.dto.PharmacyDTO;
+import br.com.webscraping.dto.PharmacyResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,9 +28,9 @@ public class ScrapingService {
     @Order(1)
     public void scrapeCategories() {
         try {
-            List<PharmacyDTO> pharmacies = pharmacyScrapingService.findAll();
+            List<PharmacyResponseDTO> pharmacies = pharmacyScrapingService.findAll();
             pharmacies.forEach(this::scrapeAndSaveCategories);
-            scrapeProducts(); // Chama o próximo passo de scraping
+            scrapeProducts();
         } catch (Exception e) {
             logScrapingError("categorias", e);
         }
@@ -39,7 +40,7 @@ public class ScrapingService {
     @Order(2)
     public void scrapeProducts() {
         try {
-            List<PharmacyDTO> pharmacies = pharmacyScrapingService.findAll();
+            List<PharmacyResponseDTO> pharmacies = pharmacyScrapingService.findAll();
             pharmacies.forEach(this::scrapeAndSaveProducts);
             logger.info("Scraping de produtos concluído!");
         } catch (Exception e) {
@@ -47,11 +48,11 @@ public class ScrapingService {
         }
     }
 
-    private void scrapeAndSaveCategories(PharmacyDTO pharmacy) {
+    private void scrapeAndSaveCategories(PharmacyResponseDTO pharmacy) {
         categoryScrapingService.scrapeAndSaveCategories(pharmacy);
     }
 
-    private void scrapeAndSaveProducts(PharmacyDTO pharmacy) {
+    private void scrapeAndSaveProducts(PharmacyResponseDTO pharmacy) {
         List<CategoryDTO> categories = categoryScrapingService.findAllCategoriesByPharmacy(pharmacy.getId());
         productScrapingService.scrapeAndSaveProducts(pharmacy, categories);
         logger.info("Produtos da farmácia {} atualizados com sucesso!", pharmacy.getName());

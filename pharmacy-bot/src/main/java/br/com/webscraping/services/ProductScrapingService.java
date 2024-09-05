@@ -2,6 +2,7 @@ package br.com.webscraping.services;
 
 import br.com.webscraping.dto.CategoryDTO;
 import br.com.webscraping.dto.PharmacyDTO;
+import br.com.webscraping.dto.PharmacyResponseDTO;
 import br.com.webscraping.dto.ProductDTO;
 import br.com.webscraping.scraper.factory.ScraperStrategy;
 import br.com.webscraping.scraper.factory.ScraperStrategyFactory;
@@ -28,12 +29,12 @@ public class ProductScrapingService {
     private final ScraperStrategyFactory scraperStrategyFactory;
     private final ProductService productService;
 
-    public void scrapeAndSaveProducts(PharmacyDTO pharmacy, List<CategoryDTO> categories) {
+    public void scrapeAndSaveProducts(PharmacyResponseDTO pharmacy, List<CategoryDTO> categories) {
         ScraperStrategy strategy = scraperStrategyFactory.getStrategy(pharmacy.getName());
         categories.forEach(category -> scrapeProductsInBatches(strategy, pharmacy, category));
     }
 
-    private void scrapeProductsInBatches(ScraperStrategy strategy, PharmacyDTO pharmacy, CategoryDTO category) {
+    private void scrapeProductsInBatches(ScraperStrategy strategy, PharmacyResponseDTO pharmacy, CategoryDTO category) {
         ExecutorService executor = createExecutorService();
         List<CompletableFuture<Void>> futures = new ArrayList<>();
         List<ProductDTO> accumulatedProducts = Collections.synchronizedList(new ArrayList<>());
@@ -63,7 +64,7 @@ public class ProductScrapingService {
     }
 
     private CompletableFuture<Void> scrapePageAsync(ScraperStrategy strategy, CategoryDTO category,
-                                                    PharmacyDTO pharmacy, int page,
+                                                    PharmacyResponseDTO pharmacy, int page,
                                                     List<ProductDTO> accumulatedProducts,
                                                     ExecutorService executor) {
         return CompletableFuture.runAsync(() -> {
