@@ -19,8 +19,7 @@ public class PharmacyRepositoryTests {
 
     @Autowired
     private CategoryRepository categoryRepository;
-    @Autowired
-    private Factory factory;
+    private final Factory factory = new Factory();
 
     private long existingId;
     private long nonExistingId;

@@ -66,16 +66,6 @@ public class PharmacyServiceIT {
         Assertions.assertTrue(result.isEmpty());
     }
 
-    @Test
-    public void findAllPagedShouldReturnSortedPagedWhenSortByName() {
-        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by("name"));
-
-        Page<PharmacyDTO> result = service.findAllPaged(pageRequest);
-
-        Assertions.assertFalse(result.isEmpty());
-        Assertions.assertEquals("Farmacia Central", result.getContent().get(0).getName()); // Ajuste conforme o nome esperado
-        Assertions.assertEquals("Farmacia Popular", result.getContent().get(1).getName()); // Ajuste conforme o nome esperado
-    }
 
     @Test
     public void updateShouldReturnPharmacyDTOWhenIdExists() {

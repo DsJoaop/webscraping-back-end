@@ -91,6 +91,11 @@ public class CategoryService {
         return list.map(mapper::toDto);
     }
 
+    @Transactional(readOnly = true)
+    public List<CategoryDTO> findAllByPharmacy(Long id) {
+        return mapper.toDto(repository.findCategoryByPharmacy(id));
+    }
+
     private void copyDtoToEntityProducts(CategoryDTO dto, Category entity) {
         if (dto.getProducts() != null) {
             entity.getProducts().clear();

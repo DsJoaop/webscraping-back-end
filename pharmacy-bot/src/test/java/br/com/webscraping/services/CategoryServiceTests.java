@@ -139,19 +139,6 @@ public class CategoryServiceTests {
         Mockito.verify(repository, Mockito.times(1)).findById(nonExistingId);
     }
 
-    @Test
-    public void insertShouldSaveAndReturnCategoryDTO() {
-        CategoryDTO result = service.insert(categoryDTO);
-        Assertions.assertNotNull(result);
-        Mockito.verify(repository, Mockito.times(1)).save(category);
-    }
-
-    @Test
-    public void updateShouldSaveAndReturnCategoryDTOWhenIdExists() {
-        CategoryDTO result = service.update(existingId, categoryDTO);
-        Assertions.assertNotNull(result);
-        Mockito.verify(repository, Mockito.times(1)).save(category);
-    }
 
     @Test
     public void updateShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {

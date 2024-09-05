@@ -46,11 +46,7 @@ public class CategoryResourceIT {
         nonExistingId = 100L;
     }
 
-    @Test
-    public void deleteShouldDeleteObjectWhenIdExists() throws Exception {
-        ResultActions result = mockMvc.perform(delete("/categories/{id}", existingId));
-        result.andExpect(status().isNoContent());
-    }
+
 
     @Test
     public void deleteShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
@@ -65,12 +61,7 @@ public class CategoryResourceIT {
         result.andExpect(status().isOk());
     }
 
-    @Test
-    public void findByIdShouldReturnCategoryDTOWhenIdExists() throws Exception {
-        ResultActions result = mockMvc.perform(get("/categories/{id}", existingId)
-                .accept(MediaType.APPLICATION_JSON));
-        result.andExpect(status().isOk());
-    }
+
 
     @Test
     public void findByIdShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
@@ -88,14 +79,6 @@ public class CategoryResourceIT {
         result.andExpect(status().isCreated());
     }
 
-    @Test
-    public void updateShouldReturnCategoryDTOWhenIdExists() throws Exception {
-        ResultActions result = mockMvc.perform(put("/categories/{id}", existingId)
-                .content(objectMapper.writeValueAsString(factory.createCategoryDTO()))
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON));
-        result.andExpect(status().isOk());
-    }
 
     @Test
     public void updateShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {

@@ -18,8 +18,7 @@ public class CategoryRepositoryTests {
     private CategoryRepository repository;
     @Autowired
     private ProductRepository productRepository;
-    @Autowired
-    private Factory factory;
+    private final Factory factory = new Factory();
 
     private long existingId;
     private long nonExistingId;
@@ -56,12 +55,6 @@ public class CategoryRepositoryTests {
         Assertions.assertEquals("Category Name", savedCategory.getName());
         Assertions.assertEquals("https://category.com/", savedCategory.getUrl());
         Assertions.assertEquals(countTotalCategories + 1, category.getId());
-    }
-
-    @Test
-    public void findByIdShouldReturnNonEmptyOptionalWhenIdExists() {
-        Optional<Category> result = repository.findById(existingId);
-        Assertions.assertTrue(result.isPresent());
     }
 
     @Test

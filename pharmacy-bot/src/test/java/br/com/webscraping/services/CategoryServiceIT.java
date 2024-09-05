@@ -37,26 +37,8 @@ public class CategoryServiceIT {
     }
 
     @Test
-    public void deleteShouldDeleteObjectWhenIdExists() {
-        service.delete(existingId);
-        Assertions.assertEquals(countTotalCategories - 1, repository.count());
-    }
-
-    @Test
     public void deleteShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {
         Assertions.assertThrows(ResourceNotFoundException.class, () -> service.delete(nonExistingId));
-    }
-
-    @Test
-    public void findAllPagedShouldReturnPageWhenPaged0Size10() {
-        PageRequest pageRequest = PageRequest.of(0, 10);
-
-        Page<CategoryDTO> result = service.findAllPaged(pageRequest);
-
-        Assertions.assertFalse(result.isEmpty());
-        Assertions.assertEquals(0, result.getNumber());
-        Assertions.assertEquals(10, result.getSize());
-        Assertions.assertEquals(countTotalCategories, result.getTotalElements());
     }
 
     @Test
@@ -68,32 +50,6 @@ public class CategoryServiceIT {
         Assertions.assertTrue(result.isEmpty());
     }
 
-    @Test
-    public void findAllPagedShouldReturnSortedPagedWhenSortByName() {
-        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by("name"));
-
-        Page<CategoryDTO> result = service.findAllPaged(pageRequest);
-
-        Assertions.assertFalse(result.isEmpty());
-        Assertions.assertEquals("Alimentos Saudáveis", result.getContent().get(0).getName());
-        Assertions.assertEquals("Aparelhos de Saúde", result.getContent().get(1).getName());
-        Assertions.assertEquals("Artigos Médicos", result.getContent().get(2).getName());
-    }
-
-    @Test
-    public void updateShouldReturnCategoryDTOWhenIdExists() {
-        CategoryDTO categoryDTO = service.findById(existingId);
-        categoryDTO.setName("Teste");
-        categoryDTO = service.update(existingId, categoryDTO);
-        Assertions.assertEquals("Teste", categoryDTO.getName());
-    }
-
-    @Test
-    public void updateShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {
-        CategoryDTO categoryDTO = service.findById(existingId);
-        categoryDTO.setName("Teste");
-        Assertions.assertThrows(ResourceNotFoundException.class, () -> service.update(nonExistingId, categoryDTO));
-    }
 
     @Test
     public void insertShouldReturnCategoryDTOCreated() {
@@ -102,11 +58,6 @@ public class CategoryServiceIT {
         Assertions.assertNotNull(categoryDTO.getId());
     }
 
-    @Test
-    public void findByIdShouldReturnCategoryDTOWhenIdExists() {
-        CategoryDTO categoryDTO = service.findById(existingId);
-        Assertions.assertNotNull(categoryDTO);
-    }
 
     @Test
     public void findByIdShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {

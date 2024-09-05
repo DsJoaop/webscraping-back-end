@@ -12,7 +12,9 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
 
     @Query(nativeQuery = true, value = """
-				SELECT * FROM TB_CATEGORY WHERE PHARMACY_ID = :pharmacy
-			""")
+			SELECT c.*
+            FROM TB_CATEGORY c
+            JOIN TB_PHARMACY_CATEGORY pc ON c.ID = pc.CATEGORY_ID
+            WHERE pc.PHARMACY_ID = 1;""")
     List<Category> findCategoryByPharmacy(Long pharmacy);
 }

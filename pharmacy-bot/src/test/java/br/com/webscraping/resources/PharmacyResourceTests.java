@@ -39,8 +39,8 @@ public class PharmacyResourceTests {
 
     @Autowired
     private ObjectMapper objectMapper;
-    @Autowired
-    private Factory factory;
+
+    private final Factory factory = new Factory();
 
     private PharmacyDTO pharmacyDTO;
     private PageImpl<PharmacyDTO> page;

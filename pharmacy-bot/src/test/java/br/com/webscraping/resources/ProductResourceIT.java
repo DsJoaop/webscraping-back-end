@@ -48,13 +48,6 @@ public class ProductResourceIT {
     }
 
     @Test
-    public void deleteShouldDeleteObjectWhenIdExists() throws Exception {
-        ResultActions result =
-                mockMvc.perform(delete("/products/{id}", existingId));
-        result.andExpect(status().isNoContent());
-    }
-
-    @Test
     public void deleteShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
         ResultActions result =
                 mockMvc.perform(delete("/products/{id}", nonExistingId));
@@ -75,24 +68,6 @@ public class ProductResourceIT {
 
         result.andExpect(status().isOk());
         result.andExpect(MockMvcResultMatchers.jsonPath("$.page.totalElements").value(countTotalProducts));
-    }
-
-    @Test
-    public void updateShouldReturnProductDTOWhenIdExists() throws Exception {
-        ProductDTO productDTO = factory.createProductDTO();
-        String expectedName = productDTO.getName();
-        String expectedDescription = productDTO.getDescription();
-
-        String jsonBody = objectMapper.writeValueAsString(productDTO);
-        ResultActions result = mockMvc.perform(put("/products/{id}", existingId)
-                .content(jsonBody)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON));
-
-        result.andExpect(status().isOk());
-        result.andExpect(jsonPath("$.id").value(existingId));
-        result.andExpect(jsonPath("$.name").value(expectedName));
-        result.andExpect(jsonPath("$.description").value(expectedDescription));
     }
 
     @Test

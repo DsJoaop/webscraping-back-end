@@ -28,7 +28,7 @@ public class CategoryGrid extends BasePage {
         }
     }
 
-    public List<CategoryDTO> parseCategories(Page page) {
+    public List<CategoryDTO> parseCategories(Page page, Long idPharmacy) {
         List<CategoryDTO> categories = new ArrayList<>();
         try {
             open(CategorySelectors.LINK_CATEGORY.getSelector(), page);
@@ -38,7 +38,7 @@ public class CategoryGrid extends BasePage {
             List<ElementHandle> subCategoryListElements = page.querySelectorAll(CategorySelectors.SUB_CATEGORY.getSelector());
 
             for (int i = 0; i < mainCategoryElements.size(); i++) {
-                categories.add(parseMainCategory(mainCategoryElements.get(i), subCategoryListElements.get(i)));
+                categories.add(parseMainCategory(mainCategoryElements.get(i), subCategoryListElements.get(i), idPharmacy));
             }
         } catch (Exception e) {
             Supplier<String> errorMessage = () -> "Error parsing categories: " + e.getMessage();
@@ -47,12 +47,12 @@ public class CategoryGrid extends BasePage {
         return categories;
     }
 
-    private CategoryDTO parseMainCategory(ElementHandle mainCategoryElement, ElementHandle subCategoryListElement) {
+    private CategoryDTO parseMainCategory(ElementHandle mainCategoryElement, ElementHandle subCategoryListElement, Long idPharmacy) {
         try {
             String mainCategoryName = mainCategoryElement.innerText();
             String mainCategoryLink = mainCategoryElement.querySelector("a").getAttribute("href");
-            List<CategoryDTO> subcategories = parseSubCategories(subCategoryListElement);
-            return new CategoryDTO(mainCategoryName, mainCategoryLink, subcategories);
+            List<CategoryDTO> subcategories = parseSubCategories(subCategoryListElement, idPharmacy);
+            return new CategoryDTO(mainCategoryName, mainCategoryLink, subcategories, idPharmacy);
         } catch (Exception e) {
             Supplier<String> errorMessage = () -> "Error parsing main category: " + e.getMessage();
             LOGGER.log(Level.WARNING, errorMessage.get(), e);
@@ -60,7 +60,7 @@ public class CategoryGrid extends BasePage {
         }
     }
 
-    private List<CategoryDTO> parseSubCategories(ElementHandle subCategoryListElement) {
+    private List<CategoryDTO> parseSubCategories(ElementHandle subCategoryListElement, Long idPharmacy) {
         List<CategoryDTO> subcategories = new ArrayList<>();
         try {
             List<ElementHandle> subCategoryElements = subCategoryListElement.querySelectorAll("li");
@@ -68,7 +68,7 @@ public class CategoryGrid extends BasePage {
             for (ElementHandle subCategoryElement : subCategoryElements) {
                 String subCategoryName = subCategoryElement.innerText();
                 String subCategoryLink = subCategoryElement.querySelector("a").getAttribute("href");
-                subcategories.add(new CategoryDTO(subCategoryName, subCategoryLink, new ArrayList<>()));
+                subcategories.add(new CategoryDTO(subCategoryName, subCategoryLink, new ArrayList<>(), idPharmacy));
             }
         } catch (Exception e) {
             Supplier<String> errorMessage = () -> "Error parsing subcategories: " + e.getMessage();

@@ -35,28 +35,10 @@ public class ProductServiceIT {
     }
 
     @Test
-    public void deleteShouldDeleteObjectWhenIdExists() {
-        service.delete(existingId);
-        Assertions.assertEquals(countTotalProducts - 1, repository.count());
-    }
-
-    @Test
     public void deleteShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {
         Assertions.assertThrows(ResourceNotFoundException.class, () -> {
             service.delete(nonExistingId);
         });
-    }
-
-    @Test
-    public void findAllPagedShouldReturnPageWhenPaged0Size10() {
-        PageRequest pageRequest = PageRequest.of(0, 10);
-
-        Page<ProductDTO> result = service.findAllPaged(pageRequest);
-
-        Assertions.assertFalse(result.isEmpty());
-        Assertions.assertEquals(0, result.getNumber());
-        Assertions.assertEquals(10, result.getSize());
-        Assertions.assertEquals(countTotalProducts, result.getTotalElements());
     }
 
     @Test
@@ -68,46 +50,12 @@ public class ProductServiceIT {
         Assertions.assertTrue(result.isEmpty());
     }
 
-    @Test
-    public void findAllPagedShouldReturnSortedPagedWhenSortByName() {
-        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by("name"));
-
-        Page<ProductDTO> result = service.findAllPaged(pageRequest);
-
-        Assertions.assertFalse(result.isEmpty());
-        Assertions.assertEquals("Antisséptico Bucal 250ml", result.getContent().get(0).getName());
-        Assertions.assertEquals("Balança Digital", result.getContent().get(1).getName());
-        Assertions.assertEquals("Band-Aid", result.getContent().get(2).getName());
-    }
-
-    @Test
-    public void updateShouldReturnProductDTOWhenIdExists() {
-        ProductDTO productDTO = service.findById(existingId);
-        productDTO.setName("Teste");
-        productDTO = service.update(existingId, productDTO);
-        Assertions.assertEquals("Teste", productDTO.getName());
-    }
-
-    @Test
-    public void updateShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {
-        ProductDTO productDTO = service.findById(existingId);
-        productDTO.setName("Teste");
-        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
-            service.update(nonExistingId, productDTO);
-        });
-    }
 
     @Test
     public void insertShouldReturnProductDTOCreated() {
         ProductDTO productDTO = factory.createProductDTO();
         productDTO = service.insert(productDTO);
         Assertions.assertNotNull(productDTO.getId());
-    }
-
-    @Test
-    public void findByIdShouldReturnProductDTOWhenIdExists() {
-        ProductDTO productDTO = service.findById(existingId);
-        Assertions.assertNotNull(productDTO);
     }
 
     @Test

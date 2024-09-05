@@ -14,8 +14,9 @@ import java.util.List;
 public class PagueMenosScraperStrategy implements ScraperStrategy {
     private final Page page;
 
+
     @Override
-    public List<CategoryDTO> scrapeCategories() {
+    public List<CategoryDTO> scrapeCategories(Long idPharmacy) throws Exception {
         return List.of();
     }
 
@@ -28,5 +29,4 @@ public class PagueMenosScraperStrategy implements ScraperStrategy {
     public int getTotalPages(CategoryDTO categoryDTO) throws Exception {
         return 0;
     }
-
 }

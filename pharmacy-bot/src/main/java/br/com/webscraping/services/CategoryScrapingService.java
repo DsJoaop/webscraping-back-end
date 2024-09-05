@@ -23,10 +23,17 @@ public class CategoryScrapingService {
     public void scrapeAndSaveCategories(PharmacyDTO pharmacy) {
         ScraperStrategy strategy = scraperStrategyFactory.getStrategy(pharmacy.getName());
         try {
-            List<CategoryDTO> categories = strategy.scrapeCategories();
-            categories.forEach(categoryService::insert);
+            List<CategoryDTO> categories = strategy.scrapeCategories(pharmacy.getId());
+            for (CategoryDTO category : categories) {
+                category.getPharmacies().add(pharmacy);
+                categoryService.insert(category);
+            }
         } catch (Exception e) {
             logger.error("Erro ao realizar scraping das categorias da farmácia {}: {}", pharmacy.getName(), e.getMessage());
         }
+    }
+
+    public List<CategoryDTO> findAllCategoriesByPharmacy(Long id) {
+        return categoryService.findAllByPharmacy(id);
     }
 }

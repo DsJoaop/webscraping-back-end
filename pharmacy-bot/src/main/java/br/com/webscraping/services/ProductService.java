@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -83,4 +84,12 @@ public class ProductService {
         return repository.count();
     }
 
+    @Transactional
+    public void saveAll(List<ProductDTO> productDTOS) {
+        List<Product> products = new ArrayList<>();
+        for (ProductDTO productDTO : productDTOS) {
+            products.add(mapper.toEntity(productDTO));
+        }
+        repository.saveAll(products);
+    }
 }
