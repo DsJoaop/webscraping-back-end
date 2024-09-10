@@ -22,13 +22,11 @@ public class PlaywrightConfig {
         return browserType.launch(launchOptions);
     }
 
-    @Bean
-    public BrowserContext browserContext(Browser browser) {
+    public BrowserContext createBrowserContext(Browser browser) {
         Browser.NewContextOptions contextOptions = createContextOptions();
         return browser.newContext(contextOptions);
     }
 
-    @Bean
     public Page createPage(BrowserContext browserContext) {
         Page page = browserContext.newPage();
         page.setDefaultNavigationTimeout(120000);
