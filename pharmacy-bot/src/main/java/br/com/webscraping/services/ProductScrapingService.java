@@ -30,86 +30,47 @@ public class ProductScrapingService {
 
     private final ScraperStrategyFactory scraperStrategyFactory;
     private final ProductService productService;
-    private final PlaywrightConfig playwrightConfig; // Injeta a configuração de Playwright
-    private final Browser browser; // Browser compartilhado entre threads
-
-    // Limita a execução a no máximo 2 threads ao mesmo tempo
+    private final PlaywrightConfig playwrightConfig;
+    private final Browser browser;
     private final ExecutorService executor = Executors.newFixedThreadPool(2);
 
     public void scrapeAndSaveProducts(PharmacyResponseDTO pharmacy, List<CategoryDTO> categories) {
         ScraperStrategy strategy = scraperStrategyFactory.getStrategy(pharmacy.getName());
-
-        // Processa cada categoria em uma nova thread com sua própria instância do Playwright
         List<CompletableFuture<Void>> futures = new ArrayList<>();
 
         for (CategoryDTO category : categories) {
             CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
-                BrowserContext context = null;
-                Page page = null;
-                try {
-                    // Cria um novo contexto e página para cada categoria
-                    context = playwrightConfig.createBrowserContext(browser);
-                    page = playwrightConfig.createPage(context);
+                try (BrowserContext context = playwrightConfig.createBrowserContext(browser);
+                     Page page = playwrightConfig.createPage(context)) {
 
                     logger.info("Iniciando scraping da categoria: {}", category.getName());
-                    scrapeProductsInBatches(strategy, pharmacy, category, page);
+                    scrapeProducts(strategy, pharmacy, category, page);
                 } catch (Exception e) {
                     logScrapingError("categoria: " + category.getName(), e);
-                } finally {
-                    if (page != null) {
-                        page.close();
-                    }
-                    if (context != null) {
-                        context.close();
-                    }
                 }
             }, executor);
 
             futures.add(future);
         }
 
-        // Espera até que todas as categorias sejam processadas
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
         executor.shutdown();
     }
 
-    private void scrapeProductsInBatches(ScraperStrategy strategy, PharmacyResponseDTO pharmacy, CategoryDTO category, Page page) {
+    private void scrapeProducts(ScraperStrategy strategy, PharmacyResponseDTO pharmacy, CategoryDTO category, Page page) {
         List<ProductDTO> accumulatedProducts = Collections.synchronizedList(new ArrayList<>());
-        List<CompletableFuture<Void>> pageFutures = new ArrayList<>();
 
         try {
-            int totalPages = strategy.getTotalPages(category);
-            for (int currentPage = 1; currentPage <= totalPages; currentPage++) {
-                // Processa cada página de produtos em paralelo dentro da mesma categoria
-                CompletableFuture<Void> pageFuture = CompletableFuture.runAsync(() -> {
-                    List<ProductDTO> products = strategy.scrapeProductsByCategoryAndPage(pharmacy, category, currentPage);
-                    synchronized (accumulatedProducts) {
-                        accumulatedProducts.addAll(products);
-                    }
-                    if (accumulatedProducts.size() >= BATCH_SIZE) {
-                        saveAccumulatedProducts(accumulatedProducts);
-                    }
-                });
+            // Chama diretamente o método que já trata a paginação
+            List<ProductDTO> products = strategy.scrapeProductsByCategory(pharmacy, category, page);
+            accumulatedProducts.addAll(products);
 
-                pageFutures.add(pageFuture);
-
-                // Salva em lote após processar várias páginas
-                if (shouldSaveBatch(currentPage, totalPages)) {
-                    CompletableFuture.allOf(pageFutures.toArray(new CompletableFuture[0])).join();
-                    saveAccumulatedProducts(accumulatedProducts);
-                    pageFutures.clear();  // Limpa as tarefas concluídas
-                }
-            }
-
-            // Salva os produtos remanescentes no final
+            // Salva os produtos quando o batch estiver completo
             saveAccumulatedProducts(accumulatedProducts);
+
         } catch (Exception e) {
             logScrapingError("categoria: " + category.getName(), e);
         }
-    }
-
-    private boolean shouldSaveBatch(int currentPage, int totalPages) {
-        return currentPage % 10 == 0 || currentPage == totalPages;
     }
 
     private void saveAccumulatedProducts(List<ProductDTO> accumulatedProducts) {

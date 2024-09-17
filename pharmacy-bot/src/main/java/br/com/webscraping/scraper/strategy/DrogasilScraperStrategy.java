@@ -17,22 +17,21 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class DrogasilScraperStrategy implements ScraperStrategy {
-    private final Page page;
     private final CategoryGrid categoryGrid;
     private final ProductsGrid productsGrid;
 
     @Override
-    public List<CategoryDTO> scrapeCategories(Long idPharmacy) {
+    public List<CategoryDTO> scrapeCategories(Long idPharmacy, Page page) {
         return categoryGrid.parseCategories(page, idPharmacy);
     }
 
     @Override
-    public List<ProductDTO> scrapeProductsByCategoryAndPage(PharmacyResponseDTO pharmacy, CategoryDTO category, int totalPages) {
-        return productsGrid.getProductsByCategoryAndPage(category.getUrl(), this.page, totalPages);
+    public List<ProductDTO> scrapeProductsByCategory(PharmacyResponseDTO pharmacy, CategoryDTO category, Page page) {
+        return productsGrid.getProducts(category.getUrl(), page);
     }
 
     @Override
-    public int getTotalPages(CategoryDTO category) {
-        return productsGrid.getPagination(category.getUrl(), this.page);
+    public int getTotalPages(CategoryDTO category, Page page) {
+        return productsGrid.getPagination(category.getUrl(), page);
     }
 }

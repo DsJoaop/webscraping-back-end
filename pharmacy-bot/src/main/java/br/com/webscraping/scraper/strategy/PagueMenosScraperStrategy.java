@@ -13,21 +13,19 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class PagueMenosScraperStrategy implements ScraperStrategy {
-    private final Page page;
-
 
     @Override
-    public List<CategoryDTO> scrapeCategories(Long idPharmacy) throws Exception {
+    public List<CategoryDTO> scrapeCategories(Long idPharmacy, Page page){
         return List.of();
     }
 
     @Override
-    public List<ProductDTO> scrapeProductsByCategoryAndPage(PharmacyResponseDTO pharmacy, CategoryDTO category, int totalPages) {
+    public List<ProductDTO> scrapeProductsByCategory(PharmacyResponseDTO pharmacy, CategoryDTO category, Page page) {
         return List.of();
     }
 
     @Override
-    public int getTotalPages(CategoryDTO categoryDTO) throws Exception {
+    public int getTotalPages(CategoryDTO categoryDTO, Page page){
         return 0;
     }
 }
